@@ -33,7 +33,7 @@ module.exports = NodeHelper.create({
 	 */
 	createFetcher: function(feed, config) {
 		var self = this;
-
+                var image = feed.image || "";
 		var url = feed.url || "";
 		var encoding = feed.encoding || "UTF-8";
 		var reloadInterval = feed.reloadInterval || config.reloadInterval || 5 * 60 * 1000;
@@ -51,7 +51,7 @@ module.exports = NodeHelper.create({
 			fetcher.onReceive(function(fetcher) {
 				for(var item in fetcher.items())
 					{
-						item.icon=this.feed_def.icon;
+					    item.image=this.feed_def.image;
 					}
 				self.broadcastFeeds();
 			}.bind({feed_var_in_function:feed}));
@@ -86,20 +86,3 @@ module.exports = NodeHelper.create({
 		this.sendSocketNotification("NEWS_ITEMS", feeds);
 	}
 });
-
-
-/*
-
-fetcher = new Fetcher(url, reloadInterval, encoding, config.logFeedWarnings);
-
-			fetcher.onReceive(function(fetcher) {
-                                // add code here to run thru the array of feed response items and add the icon url to each entry..
-                                // the feed definition was passed in as parm to the containing method..   because this is a callback, you will probably have to bind the feed definition to this function
-                                for( var item in fetcher.items())
-                                {
-                                     item.icon=this.feed_def.icon;
-                                 }
-				self.broadcastFeeds();
-			}).bind({feed_def:feed})
-
-			*/
