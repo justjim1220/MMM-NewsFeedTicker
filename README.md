@@ -18,22 +18,22 @@ modules: [
 			width: "100%",
 			feedsource: [
 			{
-                		imageUrl: "https://static01.nyt.com/images/misc/NYT_logo_rss_250x40.png",
+                		image: "https://static01.nyt.com/images/misc/NYT_logo_rss_250x40.png",
                			title: "New York Times",
 				url: "http://www.nytimes.com/services/xml/rss/nyt/HomePage.xml"
             		},
 			{
-                		imageUrl: "http://online.wsj.com/img/wsj_sm_logo.gif",
+                		image: "http://online.wsj.com/img/wsj_sm_logo.gif",
 				title: "Wall St. Journal",
 				url: "http://www.wsj.com/xml/rss/3_7085.xml"
 			},
 			{
-                		imageUrl: "http://www.gannett-cdn.com/sites/usatnetwork/images/RSS_Syndication_Logo-USATN.png",
+                		image: "http://www.gannett-cdn.com/sites/usatnetwork/images/RSS_Syndication_Logo-USATN.png",
 				title: "USA Today",
 				url: "http://rssfeeds.usatoday.com/UsatodaycomNation-TopStories"
 			},
 			{
-                		imageUrl: "https://news.bbcimg.co.uk/nol/shared/img/bbc_news_120x60.gif",
+                		image: "https://news.bbcimg.co.uk/nol/shared/img/bbc_news_120x60.gif",
 				title: "BBC World News",
 				url: "http://feeds.bbci.co.uk/news/world/rss.xml#"
 			}
