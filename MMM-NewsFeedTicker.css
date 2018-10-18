@@ -1,4 +1,4 @@
-.newsfeed {
+.MMM-NewsFeedTicker {
     width: 100%;
     height: 150px;
     font-size: 350%;
@@ -6,20 +6,20 @@
     background-color: maroon;
 }
 
-.newsfeed .marquee {
+.MMM-NewsFeedTicker .marquee {
     width: 100%;
     margin: 0 auto;
     overflow: hidden;
     white-space: nowrap;
     box-sizing: border-box;
-    -webkit-transition: marquee 121s linear infinite;
-    -moz-transition: marquee 121s linear infinite;
-    -o-transition: marquee 121s linear infinite;
-    transition: marquee 121s linear infinite;
+    -webkit-transition: marquee 0s linear infinite;
+    -moz-transition: marquee 0s linear infinite;
+    -o-transition: marquee 0s linear infinite;
+    transition: marquee 0s linear infinite;
 }
 
-.newsfeed .image {
-    height: 300px;
+.MMM-NewsFeedTicker .image {
+    height: 150px;
     vertical-align: middle;
     line-height: 120%;
 }
