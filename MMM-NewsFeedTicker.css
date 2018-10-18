@@ -1,0 +1,25 @@
+.newsfeed {
+    width: 100%;
+    height: 150px;
+    font-size: 350%;
+    line-height: 120%;
+    background-color: maroon;
+}
+
+.newsfeed .marquee {
+    width: 100%;
+    margin: 0 auto;
+    overflow: hidden;
+    white-space: nowrap;
+    box-sizing: border-box;
+    -webkit-transition: marquee 121s linear infinite;
+    -moz-transition: marquee 121s linear infinite;
+    -o-transition: marquee 121s linear infinite;
+    transition: marquee 121s linear infinite;
+}
+
+.newsfeed .image {
+    height: 300px;
+    vertical-align: middle;
+    line-height: 120%;
+}
