@@ -45,7 +45,7 @@ var Fetcher = function(url, reloadInterval, encoding, logFeedWarnings) {
 		parser.on("item", function(item) {
 
 			var title = item.title;
-			var image = item.image || item.logo || item.img || item.svg || "";
+			var image = item.image || item.logo || item.img || item.svg || this.feed_var_in_function.icon || "";
 			var description = item.description || item.summary || item.content || "";
 			var pubdate = item.pubdate || item.published || item.updated || item["dc:date"];
 			var url = item.url || item.link || "";
