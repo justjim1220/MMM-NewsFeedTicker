@@ -7,7 +7,7 @@
  * 
  * Modified by Jim Hallock (justjim1220@gmail.com)
  * 
- * thanks to  for all their help
+ * thanks to @sdetweil, @Sean, @cowboysdude, & @Mykle1 for all their help
  * and for their patience in teaching me how to do this.
  * 
  * Brought to you by the makers of Cheyenne Cigars
@@ -21,26 +21,26 @@ Module.register("newsfeed", {
     defaults: {
         feeds: [
             {
-                imageUrl: "https://static01.nyt.com/images/misc/NYT_logo_rss_250x40.png",
+                image: "https://static01.nyt.com/images/misc/NYT_logo_rss_250x40.png",
                 title: "New York Times",
-				url: "http://www.nytimes.com/services/xml/rss/nyt/HomePage.xml"
+		url: "http://www.nytimes.com/services/xml/rss/nyt/HomePage.xml"
             },
-			{
-                imageUrl: "http://online.wsj.com/img/wsj_sm_logo.gif",
-				title: "Wall St. Journal",
-				url: "http://www.wsj.com/xml/rss/3_7085.xml"
-			},
-			{
-                imageUrl: "http://www.gannett-cdn.com/sites/usatnetwork/images/RSS_Syndication_Logo-USATN.png",
-				title: "USA Today",
-				url: "http://rssfeeds.usatoday.com/UsatodaycomNation-TopStories"
-			},
-			{
-                imageUrl: "https://news.bbcimg.co.uk/nol/shared/img/bbc_news_120x60.gif",
-				title: "BBC World News",
-				url: "http://feeds.bbci.co.uk/news/world/rss.xml#"
-			}
-		],
+	    {
+                image: "http://online.wsj.com/img/wsj_sm_logo.gif",
+	 	title: "Wall St. Journal",
+		url: "http://www.wsj.com/xml/rss/3_7085.xml"
+	    },
+	    {
+                image: "http://www.gannett-cdn.com/sites/usatnetwork/images/RSS_Syndication_Logo-USATN.png",
+		title: "USA Today",
+		url: "http://rssfeeds.usatoday.com/UsatodaycomNation-TopStories"
+	    },
+	    {
+                image: "https://news.bbcimg.co.uk/nol/shared/img/bbc_news_120x60.gif",
+	        title: "BBC World News",
+		url: "http://feeds.bbci.co.uk/news/world/rss.xml#"
+	    }
+	],
 
         showMarquee: true,
         showIcon: true,
@@ -64,7 +64,7 @@ Module.register("newsfeed", {
         endTags: [],
         prohibitedWords: [],
         scrollLength: "100%",
-		logFeedWarnings: true,
+	logFeedWarnings: true,
         encoding: "UTF-8", //ISO-8859-1
     },
 
@@ -76,7 +76,7 @@ Module.register("newsfeed", {
     },
 
     getStyles: function() {
-        return ["NewsFeedTicker.css"];
+        return ["MMM-NewsFeedTicker.css"];
     },
 
     // Define required translations.
@@ -195,27 +195,27 @@ Module.register("newsfeed", {
                     }
                 }
 
-            }            
+             }            
 
-			if (this.config.showSourceTicle) {
-				var title = document.createElement("div");
-				title.className = "bright medium light" + (!this.config.wrapTitle ? " no-wrap" : "");
-				title.innerHTML = this.newsItems[this.activeItem].title;
-				wrapper.appendChild(title);
-			}
+		if (this.config.showSourceTicle) {
+			var title = document.createElement("div");
+			title.className = "bright medium light" + (!this.config.wrapTitle ? " no-wrap" : "");
+			title.innerHTML = this.newsItems[this.activeItem].title;
+			wrapper.appendChild(title);
+		}
 
-			if (this.isShowingDescription) {
-				var description = document.createElement("div");
-				description.className = "large light" + (!this.config.wrapDescription ? " no-wrap" : "");
-				var txtDesc = this.newsItems[this.activeItem].description;
-				description.innerHTML = (this.config.truncDescription ? (txtDesc.length > this.config.lengthDescription ? txtDesc.substring(0, this.config.lengthDescription) + "..." : txtDesc) : txtDesc);
-				wrapper.appendChild(description);
-			}
+		if (this.isShowingDescription) {
+			var description = document.createElement("div");
+			description.className = "large light" + (!this.config.wrapDescription ? " no-wrap" : "");
+			var txtDesc = this.newsItems[this.activeItem].description;
+			description.innerHTML = (this.config.truncDescription ? (txtDesc.length > this.config.lengthDescription ? txtDesc.substring(0, this.config.lengthDescription) + "..." : txtDesc) : txtDesc);
+			wrapper.appendChild(description);
+		}
 
             if (this.config.showMarquee && this.config.showIcon) {
                 var image = document.createElement("image");
                 image.className = "image";
-                image.innerHTML = this.newsItems[this.activeItem].imageUrl + ": &nbsp;";
+                image.innerHTML = this.newsItems[this.activeItem].image + ": &nbsp;";
 
                 wrapper.appendChild(description);
 
@@ -348,11 +348,11 @@ Module.register("newsfeed", {
         return "";
     },
     
-    logoForFeed: function(feedUrl) {
+    imageForFeed: function(feedUrl) {
         for (var f in this.config.feeds) {
             var feed = this.config.feeds[f];
             if (feed.url === feedUrl) {
-                return feed.logo || feed.icon || feed.image || "";
+                return feed.image || feed.icon || feed.logo || feed.svg || this.feed_var_in_function.icon || "";
             }
         }
         return "";
