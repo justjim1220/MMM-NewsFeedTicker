@@ -1,10 +1,18 @@
-/* global Module */
-
-/* Magic Mirror
- * Module: NewsFeed
- *
+/* Module: NewsFeedTicker
+ * version 1.2.0
+ * 
+ * ((modification of the default newsfeed module 
  * By Michael Teeuw http://michaelteeuw.nl
- * MIT Licensed.
+ * MIT Licensed.))
+ * 
+ * Modified by Jim Hallock (justjim1220@gmail.com)
+ * 
+ * thanks to  for all their help
+ * and for their patience in teaching me how to do this.
+ * 
+ * Brought to you by the makers of Cheyenne Cigars
+ * and my very own homemade Southern Sweet Tea.
+ * 
  */
 
 Module.register("newsfeed", {
@@ -78,19 +86,7 @@ Module.register("newsfeed", {
         // If you're trying to build your own module including translations, check out the documentation.
         return false;
     },
-
-    /*
-    <image>
-        <title>NYT > Home Page</title>
-        <url>
-            https://static01.nyt.com/images/misc/NYT_logo_rss_250x40.png
-        </url>
-        <link>
-            http://www.nytimes.com/pages/index.html?partner=rss&emc=rss
-        </link>
-    </image>
-    */
-
+    
     // Define start sequence.
     start: function () {
         Log.info("Starting module: " + this.name);
@@ -219,16 +215,16 @@ Module.register("newsfeed", {
             if (this.config.showMarquee && this.config.showIcon) {
                 var image = document.createElement("image");
                 image.className = "image";
-                image.innerHTML = "<img src=./modules/default/newsfeed/pics/twp-masthead-415x57.svg>" + ": &nbsp;";
+                image.innerHTML = this.newsItems[this.activeItem].imageUrl + ": &nbsp;";
 
                 wrapper.appendChild(description);
-                
-                var txtDesc = document.createElement("marquee");
-                txtDesc.setAttribute("style", "padding-bottom:25px");
-                txtDesc.className = "bright large bold";
-                txtDesc.innerHTML = moment(new Date(this.newsItems[this.activeItem].pubdate)).fromNow() + ": &nbsp;" + this.newsItems[this.activeItem].sourceTitle + "&nbsp;" + this.newsItems[this.activeItem].description;
 
-                wrapper.appendChild(txtDesc);
+                var headline = document.createElement("marquee");
+                headline.setAttribute("style", "padding-bottom:25px");
+                headline.className = "bright large bold";
+                headline.innerHTML = moment(new Date(this.newsItems[this.activeItem].pubdate)).fromNow() + ": &nbsp;" + this.newsItems[this.activeItem].sourceTitle + "&nbsp;" + this.newsItems[this.activeItem].description;
+
+                wrapper.appendChild(headline);
             }
 
             if (this.config.showFullArticle) {
