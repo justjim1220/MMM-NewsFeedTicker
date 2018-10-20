@@ -1,7 +1,7 @@
 # MMM-NewsFeedTicker
 news ticker like what you see on the news channels, except for online newspapers, showing current headlines and short descritpions. 
 
-The MMM-NewsFeedTickermodule is a 3rd party module of the <a href=https://github.com/MichMich/MagicMirror/tree/developMagicMirror>MagicMirror</a>
+The MMM-NewsFeedTickermodule is a <a href=https://github.com/MichMich/MagicMirror/wiki/3rd-Party-Modules>3rd Party Module</a> of the <a href=https://github.com/MichMich/MagicMirror/tree/developMagicMirror>MagicMirror</a> 
 
 ## Screenshots
 
