@@ -31,11 +31,6 @@ modules: [
 						url: "http://www.nytimes.com/services/xml/rss/nyt/HomePage.xml"
 					},
 					{
-						image: "http://online.wsj.com/img/wsj_sm_logo.gif",
-						title: "Wall St. Journal",
-						url: "http://www.wsj.com/xml/rss/3_7085.xml"
-					},
-					{
 						image: "http://www.gannett-cdn.com/sites/usatnetwork/images/RSS_Syndication_Logo-USATN.png",
 						title: "USA Today",
 						url: "http://rssfeeds.usatoday.com/UsatodaycomNation-TopStories"
