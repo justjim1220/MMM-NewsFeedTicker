@@ -3,6 +3,11 @@ news ticker like what you see on the news channels, except for online newspapers
 
 The MMM-NewsFeedTickermodule is a 3rd party module of the <a href=https://github.com/MichMich/MagicMirror/tree/developMagicMirror>MagicMirror</a>
 
+## Screenshots
+
+
+
+
 ## Using the module...
 
 To use this module, add it to the modules array in the 'config/config.js' file:
