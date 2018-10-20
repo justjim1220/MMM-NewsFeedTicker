@@ -5,7 +5,10 @@ The MMM-NewsFeedTickermodule is a 3rd party module of the <a href=https://github
 
 ## Screenshots
 
-
+        
+![ScreenShot for BBC World News](https://github.com/justjim1220/MMM-NewsFeedTicker/blob/master/Screenshot%20(401).png)
+![ScreenShot for USA Today](https://github.com/justjim1220/MMM-NewsFeedTicker/blob/master/Screenshot%20(407).png)
+![ScreenShot for New York Times](https://github.com/justjim1220/MMM-NewsFeedTicker/blob/master/Screenshot%20(406).png)
 
 
 ## Using the module...
