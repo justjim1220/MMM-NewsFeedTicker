@@ -17,32 +17,35 @@ To use this module, add it to the modules array in the 'config/config.js' file:
 ```
 modules: [
 	{
-			disabled: false,
-			module: "MMM-NewsFeedTicker",
-			position: "bottom_bar",	 //works best in top_bar or bottom_bar
-			//classes: "day_scheduler",  // this is for the MMM-ModuleScheduler module (https://github.com/ianperrin/MMM-ModuleScheduler.git)
-			config: {
-				height: "100px",
-				width: "100%",
-				feedsource: [
-				    {
-						image: "https://static01.nyt.com/images/misc/NYT_logo_rss_250x40.png",
-						title: "New York Times",
-						url: "http://www.nytimes.com/services/xml/rss/nyt/HomePage.xml"
-					},
-					{
-						image: "http://www.gannett-cdn.com/sites/usatnetwork/images/RSS_Syndication_Logo-USATN.png",
-						title: "USA Today",
-						url: "http://rssfeeds.usatoday.com/UsatodaycomNation-TopStories"
-					},
-					{
-						image: "https://news.bbcimg.co.uk/nol/shared/img/bbc_news_120x60.gif",
-						title: "BBC World News",
-						url: "http://feeds.bbci.co.uk/news/world/rss.xml#"
-					}
-				],
-			}
+	disabled: false,
+	module: "MMM-NewsFeedTicker",
+	position: "bottom_bar",
+	//classes: "day_scheduler",
+	config: {
+	    feeds: [
+		{
+			title: "New York Times",
+			url: "http://www.nytimes.com/services/xml/rss/nyt/HomePage.xml",
+			encoding: "UTF-8", //ISO-8859-1
+			className: "myClass",
+			defaultLogo : ""
 		},
+		{
+			title: "USA Today",
+			url: "http://rssfeeds.usatoday.com/UsatodaycomNation-TopStories",
+			encoding: "UTF-8", //ISO-8859-1
+			className: "myClass",
+			defaultLogo : ""
+		},
+		{
+			title: "BBC World News",
+			url: "http://feeds.bbci.co.uk/news/world/rss.xml#",
+			encoding: "UTF-8", //ISO-8859-1
+			className: "myClass",
+			defaultLogo : ""
+		}
+    	    ]
+	},
 ]
 ```
 
