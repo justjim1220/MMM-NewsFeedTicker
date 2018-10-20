@@ -1,25 +1,39 @@
+@keyframes marquee {
+    0% {left: 100%;}
+    100% {left: -100%;}
+}
+
 .MMM-NewsFeedTicker {
     width: 100%;
-    height: 150px;
-    font-size: 350%;
-    line-height: 120%;
+    height: 100px;
+    line-height: 100%;
+    overflow: hidden;
     background-color: maroon;
 }
 
-.MMM-NewsFeedTicker .marquee {
-    width: 100%;
-    margin: 0 auto;
-    overflow: hidden;
+.MMM-NewsFeedTicker .tickerbody {
+    position: relative;
+    bottom: 0;
+    left: 0;
+    vertical-align: middle;
     white-space: nowrap;
-    box-sizing: border-box;
-    -webkit-transition: marquee 0s linear infinite;
-    -moz-transition: marquee 0s linear infinite;
-    -o-transition: marquee 0s linear infinite;
-    transition: marquee 0s linear infinite;
+    text-align: left;
+    animation: marquee 31s linear;
+  }
+
+.MMM-NewsFeedTicker .headline {
+    padding-top: 15px;
+    margin: 0 auto;
+    white-space: nowrap;
 }
 
 .MMM-NewsFeedTicker .image {
-    height: 150px;
-    vertical-align: middle;
-    line-height: 120%;
+  position: absolute;
+  display: inline-block;
+  vertical-align: middle;
+  bottom: 10;
+  left: 0;
+  height: 100px;
+  z-index: 10;
+  background-color: #FFF;
 }

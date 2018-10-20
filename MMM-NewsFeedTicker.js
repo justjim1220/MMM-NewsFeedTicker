@@ -1,21 +1,21 @@
 /* Module: NewsFeedTicker
  * version 1.2.0
- * 
- * ((modification of the default newsfeed module 
+ *
+ * ((modification of the default newsfeed module
  * By Michael Teeuw http://michaelteeuw.nl
  * MIT Licensed.))
- * 
+ *
  * Modified by Jim Hallock (justjim1220@gmail.com)
- * 
+ *
  * thanks to @sdetweil, @Sean, @cowboysdude, & @Mykle1 for all their help
  * and for their patience in teaching me how to do this.
- * 
+ *
  * Brought to you by the makers of Cheyenne Cigars
  * and my very own homemade Southern Sweet Tea.
- * 
+ *
  */
 
-Module.register("newsfeed", {
+Module.register("MMM-NewsFeedTicker", {
 
     // Default module config.
     defaults: {
@@ -23,24 +23,9 @@ Module.register("newsfeed", {
             {
                 image: "https://static01.nyt.com/images/misc/NYT_logo_rss_250x40.png",
                 title: "New York Times",
-		url: "http://www.nytimes.com/services/xml/rss/nyt/HomePage.xml"
+                url: "http://www.nytimes.com/services/xml/rss/nyt/HomePage.xml"
             },
-	    {
-                image: "http://online.wsj.com/img/wsj_sm_logo.gif",
-	 	title: "Wall St. Journal",
-		url: "http://www.wsj.com/xml/rss/3_7085.xml"
-	    },
-	    {
-                image: "http://www.gannett-cdn.com/sites/usatnetwork/images/RSS_Syndication_Logo-USATN.png",
-		title: "USA Today",
-		url: "http://rssfeeds.usatoday.com/UsatodaycomNation-TopStories"
-	    },
-	    {
-                image: "https://news.bbcimg.co.uk/nol/shared/img/bbc_news_120x60.gif",
-	        title: "BBC World News",
-		url: "http://feeds.bbci.co.uk/news/world/rss.xml#"
-	    }
-	],
+        ],
 
         showMarquee: true,
         showIcon: true,
@@ -52,10 +37,10 @@ Module.register("newsfeed", {
         truncDescription: false,
         lengthDescription: 1900,
         hideLoading: false,
-        reloadInterval: 60 * 60 * 1000, // every 30 minutes
-        updateInterval: 30 * 1000,      // every 90 seconds
-        animationSpeed: 500,
-        maxNewsItems: 2, // 0 for unlimited
+        reloadInterval: 60 * 60 * 1000, // every 60 minutes
+        updateInterval: 45 * 1000,      // every 45 seconds
+        animationSpeed: 50,
+        maxNewsItems: 5, // 0 for unlimited
         ignoreOldItems: true,
         ignoreOlderThan: 2 * 24 * 60 * 60 * 1000, // 2 days
         removeStartTags: "both",
@@ -64,11 +49,11 @@ Module.register("newsfeed", {
         endTags: [],
         prohibitedWords: [],
         scrollLength: "100%",
-	logFeedWarnings: true,
+        logFeedWarnings: true,
         encoding: "UTF-8", //ISO-8859-1
     },
 
-	requiresversion: "2.1.0",
+  requiresversion: "2.1.0",
 
     // Define required scripts.
     getScripts: function () {
@@ -86,7 +71,7 @@ Module.register("newsfeed", {
         // If you're trying to build your own module including translations, check out the documentation.
         return false;
     },
-    
+
     // Define start sequence.
     start: function () {
         Log.info("Starting module: " + this.name);
@@ -101,7 +86,7 @@ Module.register("newsfeed", {
 
         this.registerFeeds();
 
-		"use strict";
+    "use strict";
 
         this.isShowingDescription = this.config.showDescription;
     },
@@ -124,7 +109,7 @@ Module.register("newsfeed", {
         var wrapper = document.createElement("div");
 
         if (this.config.feedUrl) {
-            wrapper.className = "bold xxlarge normal";
+            wrapper.className = "bold normal";
             wrapper.innerHTML = "The configuration options for the newsfeed module have changed.<br>Please check the documentation.";
             return wrapper;
         }
@@ -195,36 +180,44 @@ Module.register("newsfeed", {
                     }
                 }
 
-             }            
+             }
 
-		if (this.config.showSourceTicle) {
-			var title = document.createElement("div");
-			title.className = "bright medium light" + (!this.config.wrapTitle ? " no-wrap" : "");
-			title.innerHTML = this.newsItems[this.activeItem].title;
-			wrapper.appendChild(title);
-		}
+    if (this.config.showSourceTicle) {
+      var title = document.createElement("div");
+      title.className = "bright medium light" + (!this.config.wrapTitle ? " no-wrap" : "");
+      title.innerHTML = this.newsItems[this.activeItem].title;
+      wrapper.appendChild(title);
+    }
 
-		if (this.isShowingDescription) {
-			var description = document.createElement("div");
-			description.className = "large light" + (!this.config.wrapDescription ? " no-wrap" : "");
-			var txtDesc = this.newsItems[this.activeItem].description;
-			description.innerHTML = (this.config.truncDescription ? (txtDesc.length > this.config.lengthDescription ? txtDesc.substring(0, this.config.lengthDescription) + "..." : txtDesc) : txtDesc);
-			wrapper.appendChild(description);
-		}
+    if (this.isShowingDescription) {
+      var description = document.createElement("div");
+      description.className = "light" + (!this.config.wrapDescription ? " no-wrap" : "");
+      var txtDesc = this.newsItems[this.activeItem].description;
+      description.innerHTML = (this.config.truncDescription ? (txtDesc.length > this.config.lengthDescription ? txtDesc.substring(0, this.config.lengthDescription) + "..." : txtDesc) : txtDesc);
+      wrapper.appendChild(description);
+    }
 
             if (this.config.showMarquee && this.config.showIcon) {
-                var image = document.createElement("image");
+                var image = document.createElement("img");
                 image.className = "image";
-                image.innerHTML = this.newsItems[this.activeItem].image + ": &nbsp;";
+                image.src = this.newsItems[this.activeItem].logo
+                wrapper.appendChild(image);
 
-                wrapper.appendChild(description);
+                var tickerBody = document.createElement("div")
+                tickerBody.className = "tickerbody"
+                tickerBody.style.animationDuration = Math.round(this.config.updateInterval / 1000) + "s";
+                tickerBody.addEventListener("animationend", ()=>{
+                    headline.innerHTML = ""
+                    this.scheduleUpdateInterval()
+                  }, false);
 
-                var headline = document.createElement("marquee");
+                var headline = document.createElement("span");
                 headline.setAttribute("style", "padding-bottom:25px");
-                headline.className = "bright large bold";
-                headline.innerHTML = moment(new Date(this.newsItems[this.activeItem].pubdate)).fromNow() + ": &nbsp;" + this.newsItems[this.activeItem].sourceTitle + "&nbsp;" + this.newsItems[this.activeItem].description;
+                headline.className = "bold xlarge bright";
+                headline.innerHTML = "<font color= #ffaa00>" + moment(new Date(this.newsItems[this.activeItem].pubdate)).fromNow() + ": &nbsp;" + "</font>" + this.newsItems[this.activeItem].title + "&nbsp; || &nbsp;" + this.newsItems[this.activeItem].description;
+                tickerBody.appendChild(headline);
 
-                wrapper.appendChild(headline);
+                wrapper.appendChild(tickerBody);
             }
 
             if (this.config.showFullArticle) {
@@ -258,9 +251,9 @@ Module.register("newsfeed", {
         return wrapper;
     },
 
-	/* registerFeeds()
-	 * registers the feeds to be used by the backend.
-	 */
+  /* registerFeeds()
+   * registers the feeds to be used by the backend.
+   */
     registerFeeds: function () {
         for (var f in this.config.feeds) {
             var feed = this.config.feeds[f];
@@ -271,11 +264,11 @@ Module.register("newsfeed", {
         }
     },
 
-	/* generateFeed()
-	 * Generate an ordered list of items for this configured module.
-	 *
-	 * attribute feeds object - An object with feeds returned by the node helper.
-	 */
+  /* generateFeed()
+   * Generate an ordered list of items for this configured module.
+   *
+   * attribute feeds object - An object with feeds returned by the node helper.
+   */
     generateFeed: function (feeds) {
         var newsItems = [];
         for (var feed in feeds) {
@@ -314,13 +307,13 @@ Module.register("newsfeed", {
         this.newsItems = newsItems;
     },
 
-	/* subscribedToFeed(feedUrl)
-	 * Check if this module is configured to show this feed.
-	 *
-	 * attribute feedUrl string - Url of the feed to check.
-	 *
-	 * returns bool
-	 */
+  /* subscribedToFeed(feedUrl)
+   * Check if this module is configured to show this feed.
+   *
+   * attribute feedUrl string - Url of the feed to check.
+   *
+   * returns bool
+   */
     subscribedToFeed: function (feedUrl) {
         for (var f in this.config.feeds) {
             var feed = this.config.feeds[f];
@@ -331,13 +324,13 @@ Module.register("newsfeed", {
         return false;
     },
 
-	/* titleForFeed(feedUrl)
-	 * Returns title for a specific feed Url.
-	 *
-	 * attribute feedUrl string - Url of the feed to check.
-	 *
-	 * returns string
-	 */
+  /* titleForFeed(feedUrl)
+   * Returns title for a specific feed Url.
+   *
+   * attribute feedUrl string - Url of the feed to check.
+   *
+   * returns string
+   */
     titleForFeed: function (feedUrl) {
         for (var f in this.config.feeds) {
             var feed = this.config.feeds[f];
@@ -347,7 +340,7 @@ Module.register("newsfeed", {
         }
         return "";
     },
-    
+
     imageForFeed: function(feedUrl) {
         for (var f in this.config.feeds) {
             var feed = this.config.feeds[f];
@@ -358,9 +351,9 @@ Module.register("newsfeed", {
         return "";
     },
 
-	/* scheduleUpdateInterval()
-	 * Schedule visual update.
-	 */
+  /* scheduleUpdateInterval()
+   * Schedule visual update.
+   */
     scheduleUpdateInterval: function () {
         var self = this;
 
@@ -372,13 +365,13 @@ Module.register("newsfeed", {
         }, this.config.updateInterval);
     },
 
-	/* capitalizeFirstLetter(string)
-	 * Capitalizes the first character of a string.
-	 *
-	 * argument string string - Input string.
-	 *
-	 * return string - Capitalized output string.
-	 */
+  /* capitalizeFirstLetter(string)
+   * Capitalizes the first character of a string.
+   *
+   * argument string string - Input string.
+   *
+   * return string - Capitalized output string.
+   */
     capitalizeFirstLetter: function (string) {
         return string.charAt(0).toUpperCase() + string.slice(1);
     },
@@ -425,9 +418,9 @@ Module.register("newsfeed", {
                 Log.info(this.name + " - scrolling left");
                 Log.info(this.name + " - ARTICLE_MORE_DETAILS, scroll position: " + this.config.scrollLength);
             }
-			else {
-				this.showFullArticle();
-			}
+      else {
+        this.showFullArticle();
+      }
         } else if (notification == "ARTICLE_SCROLL_UP") {
             if (this.config.showFullArticle == true) {
                 this.scrollPosition -= this.config.scrollLength;
@@ -439,30 +432,30 @@ Module.register("newsfeed", {
             this.resetDescrOrFullArticleAndTimer();
             Log.info(this.name + " - showing only article titles again");
             this.updateDom(100);
-		} else if (notification === "ARTICLE_TOGGLE_FULL"){
-			if (this.config.showFullArticle){
-				this.activeItem++;
-				this.resetDescrOrFullArticleAndTimer();
-			} else {
-				this.showFullArticle();
-			}
-		} else {
-			Log.info(this.name + " - unknown notification, ignoring: " + notification);
-		}
-	},
+    } else if (notification === "ARTICLE_TOGGLE_FULL"){
+      if (this.config.showFullArticle){
+        this.activeItem++;
+        this.resetDescrOrFullArticleAndTimer();
+      } else {
+        this.showFullArticle();
+      }
+    } else {
+      Log.info(this.name + " - unknown notification, ignoring: " + notification);
+    }
+  },
 
-	showFullArticle: function() {
-		this.isShowingDescription = !this.isShowingDescription;
-		this.config.showFullArticle = !this.isShowingDescription;
-		// make bottom bar align to top to allow scrolling
-		if(this.config.showFullArticle === true){
-			document.getElementsByClassName("region top bar")[0].style.bottom = "inherit";
-			document.getElementsByClassName("region top bar")[0].style.top = "-90px";
-		}
-		clearInterval(timer);
-		timer = null;
-		Log.info(this.name + " - showing " + this.isShowingDescription ? "article description" : "full article");
-		this.updateDom(100);
-	}
+  showFullArticle: function() {
+    this.isShowingDescription = !this.isShowingDescription;
+    this.config.showFullArticle = !this.isShowingDescription;
+    // make bottom bar align to top to allow scrolling
+    if(this.config.showFullArticle === true){
+      document.getElementsByClassName("region top bar")[0].style.bottom = "inherit";
+      document.getElementsByClassName("region top bar")[0].style.top = "-90px";
+    }
+    clearInterval(timer);
+    timer = null;
+    Log.info(this.name + " - showing " + this.isShowingDescription ? "article description" : "full article");
+    this.updateDom(100);
+  }
 
 });

@@ -17,7 +17,7 @@ var iconv = require("iconv-lite");
  * attribute logFeedWarnings boolean - Log warnings when there is an error parsing a news article.
  */
 
-var Fetcher = function(url, reloadInterval, encoding, logFeedWarnings) {
+var Fetcher = function(url, reloadInterval, encoding, logFeedWarnings, defaultLogo) {
 	var self = this;
 	if (reloadInterval < 1000) {
 		reloadInterval = 1000;
@@ -25,6 +25,7 @@ var Fetcher = function(url, reloadInterval, encoding, logFeedWarnings) {
 
 	var reloadTimer = null;
 	var items = [];
+	var logo = defaultLogo;
 
 	var fetchFailedCallback = function() {};
 	var itemsReceivedCallback = function() {};
@@ -42,25 +43,22 @@ var Fetcher = function(url, reloadInterval, encoding, logFeedWarnings) {
 
 		var parser = new FeedMe();
 
-		parser.on("item", function(item) {
-
+		parser.on("item", (item)=> {
 			var title = item.title;
-			var image = item.image || item.logo || item.img || item.svg || this.feed_var_in_function.icon || "";
 			var description = item.description || item.summary || item.content || "";
 			var pubdate = item.pubdate || item.published || item.updated || item["dc:date"];
 			var url = item.url || item.link || "";
 
 			if (title && pubdate) {
-
 				var regex = /(<([^>]+)>)/ig;
 				description = description.toString().replace(regex, "");
 
 				items.push({
 					title: title,
-					image: image,
 					description: description,
 					pubdate: pubdate,
 					url: url,
+					logo: defaultLogo
 				});
 
 			} else if (logFeedWarnings) {
@@ -73,28 +71,11 @@ var Fetcher = function(url, reloadInterval, encoding, logFeedWarnings) {
 			}
 		});
 
-		parser.on("image", function(image){
-			var title = image.title;
-			var image = image.image || image.logo || image.img || image.svg || this.feed_var_in_function.icon || "";
-			var url = image.url || image.link || "";
-			if (image && url) {
-
-				var regex = /(]+)>)/ig;
-				description = description.toString().replace(regex, "");
-
-				images.push({
-					title: title,
-					image: image,
-					url: url,
-				});
-
+		parser.on("image", (image) =>{
+			if (image.url) {
+				defaultLogo = image.url
 			} else if (logFeedWarnings) {
-				console.log("Can't parse feed item:");
-				console.log(item);
-				console.log("Title: " + title);
-				console.log("Image: " + image);
-				console.log("Description: " + description);
-				console.log("Pubdate: " + pubdate);
+				console.log("image parsing error.")
 			}
 		});
 
@@ -180,9 +161,14 @@ var Fetcher = function(url, reloadInterval, encoding, logFeedWarnings) {
 		return url;
 	};
 
+	/*
 	this.image = function() {
 		return image;
 	};
+	*/
+	this.logo = function() {
+		return logo
+	}
 
 	this.items = function() {
 		return items;

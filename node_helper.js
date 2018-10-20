@@ -33,7 +33,7 @@ module.exports = NodeHelper.create({
 	 */
 	createFetcher: function(feed, config) {
 		var self = this;
-                var image = feed.image || "";
+    var defaultLogo = feed.image || "";
 		var url = feed.url || "";
 		var encoding = feed.encoding || "UTF-8";
 		var reloadInterval = feed.reloadInterval || config.reloadInterval || 5 * 60 * 1000;
@@ -46,12 +46,14 @@ module.exports = NodeHelper.create({
 		var fetcher;
 		if (typeof self.fetchers[url] === "undefined") {
 			console.log("Create new news fetcher for url: " + url + " - Interval: " + reloadInterval);
-			fetcher = new Fetcher(url, reloadInterval, encoding, config.logFeedWarnings);
+			fetcher = new Fetcher(url, reloadInterval, encoding, config.logFeedWarnings, defaultLogo);
 
 			fetcher.onReceive(function(fetcher) {
-				for(var item in fetcher.items())
+				var items = fetcher.items()
+				for(var i in items)
 					{
-					    item.image=this.feed_def.image;
+						var item = items[i]
+					    //item.image=this.feed_def.image;
 					}
 				self.broadcastFeeds();
 			}.bind({feed_var_in_function:feed}));
