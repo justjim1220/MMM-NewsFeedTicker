@@ -21,9 +21,11 @@ Module.register("MMM-NewsFeedTicker", {
     defaults: {
         feeds: [
             {
-                image: "https://static01.nyt.com/images/misc/NYT_logo_rss_250x40.png",
                 title: "New York Times",
-                url: "http://www.nytimes.com/services/xml/rss/nyt/HomePage.xml"
+                url: "http://www.nytimes.com/services/xml/rss/nyt/HomePage.xml",
+                encoding: "UTF-8", //ISO-8859-1
+                className: "myClass",
+                defaultLogo : ""
             },
         ],
 
