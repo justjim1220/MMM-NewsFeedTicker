@@ -53,18 +53,14 @@ modules: [
 ```
 cd ~/MagicMirror/modules
 git clone https://github.com/justjim1220/MMM-NewsFeedTicker.git
-cd MMM-NewsFeedTicker
-npm install
 ```
 
 ## Other Info...
 ```
 can add as many feeds as you like.
-to change or add feedsources... 
- - need to make sure the site can be linked 
- - need to add the imageURL from the RSS or XML feed
+to change or add feedsources... you need to make sure the site can be linked 
  
- - Hope you all like it!
+Hope you all like it!
 ```
 
 
