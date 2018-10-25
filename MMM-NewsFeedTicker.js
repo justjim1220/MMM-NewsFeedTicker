@@ -55,7 +55,7 @@ Module.register("MMM-NewsFeedTicker", {
         encoding: "UTF-8", //ISO-8859-1
     },
 
-  requiresversion: "2.1.0",
+      requiresversion: "2.1.0",
 
     // Define required scripts.
     getScripts: function () {
@@ -151,7 +151,6 @@ Module.register("MMM-NewsFeedTicker", {
                         this.newsItems[this.activeItem].title = this.newsItems[this.activeItem].title.slice(this.config.startTags[f].length, this.newsItems[this.activeItem].title.length);
                     }
                 }
-
             }
 
             if (this.config.removeStartTags == "description" || this.config.removeStartTags == "both") {
@@ -163,7 +162,6 @@ Module.register("MMM-NewsFeedTicker", {
                         }
                     }
                 }
-
             }
 
             //Remove selected tags from the end of rss feed items (title or description)
@@ -181,23 +179,22 @@ Module.register("MMM-NewsFeedTicker", {
                         }
                     }
                 }
+            }
 
-             }
+            if (this.config.showSourceTicle) {
+                var title = document.createElement("div");
+                title.className = "bright medium light" + (!this.config.wrapTitle ? " no-wrap" : "");
+                title.innerHTML = this.newsItems[this.activeItem].title;
+                wrapper.appendChild(title);
+            }
 
-    if (this.config.showSourceTicle) {
-      var title = document.createElement("div");
-      title.className = "bright medium light" + (!this.config.wrapTitle ? " no-wrap" : "");
-      title.innerHTML = this.newsItems[this.activeItem].title;
-      wrapper.appendChild(title);
-    }
-
-    if (this.isShowingDescription) {
-      var description = document.createElement("div");
-      description.className = "light" + (!this.config.wrapDescription ? " no-wrap" : "");
-      var txtDesc = this.newsItems[this.activeItem].description;
-      description.innerHTML = (this.config.truncDescription ? (txtDesc.length > this.config.lengthDescription ? txtDesc.substring(0, this.config.lengthDescription) + "..." : txtDesc) : txtDesc);
-      wrapper.appendChild(description);
-    }
+            if (this.isShowingDescription) {
+                var description = document.createElement("div");
+                description.className = "light" + (!this.config.wrapDescription ? " no-wrap" : "");
+                var txtDesc = this.newsItems[this.activeItem].description;
+                description.innerHTML = (this.config.truncDescription ? (txtDesc.length > this.config.lengthDescription ? txtDesc.substring(0, this.config.lengthDescription) + "..." : txtDesc) : txtDesc);
+                wrapper.appendChild(description);
+            }
 
             if (this.config.showMarquee && this.config.showIcon) {
                 var image = document.createElement("img");
@@ -211,7 +208,7 @@ Module.register("MMM-NewsFeedTicker", {
                 tickerBody.addEventListener("animationend", ()=>{
                     headline.innerHTML = ""
                     this.scheduleUpdateInterval()
-                  }, false);
+                }, false);
 
                 var headline = document.createElement("span");
                 headline.setAttribute("style", "padding-bottom:25px");
