@@ -125,7 +125,7 @@ Module.register("MMM-NewsFeedTicker", {
             // this.config.showFullArticle is a run-time configuration, triggered by optional notifications
             if (!this.config.showFullArticle && (this.config.showSourceTitle || this.config.showPublishDate)) {
                 var sourceAndTimestamp = document.createElement("div");
-                //sourceAndTimestamp.className = "bold large dimmed";
+                //sourceAndTimestamp.className = "bold small dimmed";
 
                 if (this.config.showSourceTitle && this.newsItems[this.activeItem].sourceTitle !== "") {
                     sourceAndTimestamp.innerHTML = this.newsItems[this.activeItem].sourceTitle;
@@ -183,7 +183,7 @@ Module.register("MMM-NewsFeedTicker", {
 
             if (this.config.showSourceTicle) {
                 var title = document.createElement("div");
-                title.className = "bright medium light" + (!this.config.wrapTitle ? " no-wrap" : "");
+                title.className = "bright small light" + (!this.config.wrapTitle ? " no-wrap" : "");
                 title.innerHTML = this.newsItems[this.activeItem].title;
                 wrapper.appendChild(title);
             }
@@ -211,8 +211,7 @@ Module.register("MMM-NewsFeedTicker", {
                 }, false);
 
                 var headline = document.createElement("span");
-                headline.setAttribute("style", "padding-bottom:25px");
-                headline.className = "bold xlarge bright";
+                headline.className = "bold small bright";
                 headline.innerHTML = "<font color= #ffaa00>" + moment(new Date(this.newsItems[this.activeItem].pubdate)).fromNow() + ": &nbsp;" + "</font>" + this.newsItems[this.activeItem].title + "&nbsp; || &nbsp;" + this.newsItems[this.activeItem].description;
                 tickerBody.appendChild(headline);
 
