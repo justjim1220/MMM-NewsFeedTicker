@@ -19,16 +19,86 @@ Module.register("MMM-NewsFeedTicker", {
 
     // Default module config.
     defaults: {
-        feeds: [
+        feeds: 
+        [
             {
-                title: "New York Times",
-                url: "http://www.nytimes.com/services/xml/rss/nyt/HomePage.xml",
+                title: "NBC Sports NFL News",
+                url: "https://profootballtalk.nbcsports.com/feed/atom/",
+                encoding: "UTF-8", //ISO-8859-1
+                className: "myClass",
+                defaultLogo: "",
+                customLogo: "NBCSports-Network"
+            },
+            {
+                title: "NFL News",
+                url: "https://www.rotowire.com/rss/news.htm?sport=nfl",
+                encoding: "UTF-8", //ISO-8859-1
+                className: "myClass",
+                defaultLogo: ""
+            },
+            {
+                title: "ESPN NFL News",
+                url: "http://www.espn.com/espn/rss/nfl/news",
                 encoding: "UTF-8", //ISO-8859-1
                 className: "myClass",
                 defaultLogo : ""
             },
+            {
+                title: "Kansas City Fox Sports News",
+                url: "https://api.foxsports.com/v1/rss?partnerKey=zBaFxRyGKCfxBagJG9b8pqLyndmvo7UU&tag=kansas-city",
+                encoding: "UTF-8", //ISO-8859-1
+                className: "myClass",
+                defaultLogo : ""
+            },
+            {
+                // no logo
+                title: "ScoresPro NFL News",
+                url: "https://www.scorespro.com/rss/live-football.xml",
+                encoding: "UTF-8", //ISO-8859-1
+                className: "myClass",
+                defaultLogo: "",
+                customLogo: "SportsPro"
+            },
+            {
+                title: "CBC Canada NFL News",
+                url: "https://www.cbc.ca/cmlink/rss-sports-nfl",
+                encoding: "UTF-8", //ISO-8859-1
+                className: "myClass",
+                defaultLogo : ""
+            },
+            {
+                title: "USA Today NFL News",
+                url: "http://rssfeeds.usatoday.com/UsatodaycomNfl-TopStories",
+                encoding: "UTF-8", //ISO-8859-1
+                className: "myClass",
+                defaultLogo : ""
+            },
+            {
+                title: "Fox Sports NFL News",
+                url: "https://api.foxsports.com/v1/rss?partnerKey=zBaFxRyGKCfxBagJG9b8pqLyndmvo7UU&tag=nfl",
+                encoding: "UTF-8", //ISO-8859-1
+                className: "myClass",
+                defaultLogo : ""
+            },
+            {
+                title: "CBS Sports NFL Headlines",
+                url: "https://www.cbssports.com/rss/headlines/nfl/",
+                encoding: "UTF-8", //ISO-8859-1
+                className: "myClass",
+                defaultLogo : ""
+            },
+            {
+                // no logo
+                title: "Sports Illustrated NFL News",
+                url: "https://www.si.com/rss/si_nfl.rss",
+                encoding: "UTF-8", //ISO-8859-1
+                className: "myClass",
+                defaultLogo: "",
+                customLogo: "SportsIllustrated"
+            }
         ],
 
+        useCustomLogo: true,
         showMarquee: true,
         showIcon: true,
         showSourceTitle: false,
@@ -42,7 +112,7 @@ Module.register("MMM-NewsFeedTicker", {
         reloadInterval: 60 * 60 * 1000, // every 60 minutes
         updateInterval: 45 * 1000,      // every 45 seconds
         animationSpeed: 50,
-        maxNewsItems: 5, // 0 for unlimited
+        maxNewsItems: 0, // 0 for unlimited
         ignoreOldItems: true,
         ignoreOlderThan: 2 * 24 * 60 * 60 * 1000, // 2 days
         removeStartTags: "both",
@@ -55,7 +125,7 @@ Module.register("MMM-NewsFeedTicker", {
         encoding: "UTF-8", //ISO-8859-1
     },
 
-      requiresversion: "2.1.0",
+  requiresversion: "2.1.0",
 
     // Define required scripts.
     getScripts: function () {
@@ -88,7 +158,7 @@ Module.register("MMM-NewsFeedTicker", {
 
         this.registerFeeds();
 
-    "use strict";
+        "use strict";
 
         this.isShowingDescription = this.config.showDescription;
     },
@@ -125,7 +195,7 @@ Module.register("MMM-NewsFeedTicker", {
             // this.config.showFullArticle is a run-time configuration, triggered by optional notifications
             if (!this.config.showFullArticle && (this.config.showSourceTitle || this.config.showPublishDate)) {
                 var sourceAndTimestamp = document.createElement("div");
-                //sourceAndTimestamp.className = "bold small dimmed";
+                //sourceAndTimestamp.className = "bold large dimmed";
 
                 if (this.config.showSourceTitle && this.newsItems[this.activeItem].sourceTitle !== "") {
                     sourceAndTimestamp.innerHTML = this.newsItems[this.activeItem].sourceTitle;
@@ -151,6 +221,7 @@ Module.register("MMM-NewsFeedTicker", {
                         this.newsItems[this.activeItem].title = this.newsItems[this.activeItem].title.slice(this.config.startTags[f].length, this.newsItems[this.activeItem].title.length);
                     }
                 }
+
             }
 
             if (this.config.removeStartTags == "description" || this.config.removeStartTags == "both") {
@@ -162,6 +233,7 @@ Module.register("MMM-NewsFeedTicker", {
                         }
                     }
                 }
+
             }
 
             //Remove selected tags from the end of rss feed items (title or description)
@@ -179,27 +251,28 @@ Module.register("MMM-NewsFeedTicker", {
                         }
                     }
                 }
+
             }
 
             if (this.config.showSourceTicle) {
-                var title = document.createElement("div");
-                title.className = "bright small light" + (!this.config.wrapTitle ? " no-wrap" : "");
-                title.innerHTML = this.newsItems[this.activeItem].title;
-                wrapper.appendChild(title);
+            var title = document.createElement("div");
+            title.className = "bright medium light" + (!this.config.wrapTitle ? " no-wrap" : "");
+            title.innerHTML = this.newsItems[this.activeItem].title;
+            wrapper.appendChild(title);
             }
 
             if (this.isShowingDescription) {
-                var description = document.createElement("div");
-                description.className = "light" + (!this.config.wrapDescription ? " no-wrap" : "");
-                var txtDesc = this.newsItems[this.activeItem].description;
-                description.innerHTML = (this.config.truncDescription ? (txtDesc.length > this.config.lengthDescription ? txtDesc.substring(0, this.config.lengthDescription) + "..." : txtDesc) : txtDesc);
-                wrapper.appendChild(description);
+            var description = document.createElement("div");
+            description.className = "light" + (!this.config.wrapDescription ? " no-wrap" : "");
+            var txtDesc = this.newsItems[this.activeItem].description;
+            description.innerHTML = (this.config.truncDescription ? (txtDesc.length > this.config.lengthDescription ? txtDesc.substring(0, this.config.lengthDescription) + "..." : txtDesc) : txtDesc);
+            wrapper.appendChild(description);
             }
 
             if (this.config.showMarquee && this.config.showIcon) {
                 var image = document.createElement("img");
                 image.className = "image";
-                image.src = this.newsItems[this.activeItem].logo
+                image.src = this.newsItems[this.activeItem].logo;
                 wrapper.appendChild(image);
 
                 var tickerBody = document.createElement("div")
@@ -211,7 +284,7 @@ Module.register("MMM-NewsFeedTicker", {
                 }, false);
 
                 var headline = document.createElement("span");
-                headline.className = "bold small bright";
+                headline.className = "bold xlarge bright";
                 headline.innerHTML = "<font color= #ffaa00>" + moment(new Date(this.newsItems[this.activeItem].pubdate)).fromNow() + ": &nbsp;" + "</font>" + this.newsItems[this.activeItem].title + "&nbsp; || &nbsp;" + this.newsItems[this.activeItem].description;
                 tickerBody.appendChild(headline);
 
