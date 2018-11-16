@@ -256,7 +256,7 @@ Module.register("MMM-NewsFeedTicker", {
 
             if (this.config.showSourceTicle) {
             var title = document.createElement("div");
-            title.className = "bright medium light" + (!this.config.wrapTitle ? " no-wrap" : "");
+            title.className = "bright small light" + (!this.config.wrapTitle ? " no-wrap" : "");
             title.innerHTML = this.newsItems[this.activeItem].title;
             wrapper.appendChild(title);
             }
@@ -284,7 +284,7 @@ Module.register("MMM-NewsFeedTicker", {
                 }, false);
 
                 var headline = document.createElement("span");
-                headline.className = "bold xlarge bright";
+                headline.className = "bold small bright";
                 headline.innerHTML = "<font color= #ffaa00>" + moment(new Date(this.newsItems[this.activeItem].pubdate)).fromNow() + ": &nbsp;" + "</font>" + this.newsItems[this.activeItem].title + "&nbsp; || &nbsp;" + this.newsItems[this.activeItem].description;
                 tickerBody.appendChild(headline);
 
