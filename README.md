@@ -5,11 +5,9 @@ The MMM-NewsFeedTickermodule is a <a href=https://github.com/MichMich/MagicMirro
 
 ## Screenshots
 
-        
 ![ScreenShot for BBC World News](https://github.com/justjim1220/MMM-NewsFeedTicker/blob/master/Screenshot%20(401).png)
 ![ScreenShot for USA Today](https://github.com/justjim1220/MMM-NewsFeedTicker/blob/master/Screenshot%20(407).png)
 ![ScreenShot for New York Times](https://github.com/justjim1220/MMM-NewsFeedTicker/blob/master/Screenshot%20(406).png)
-
 
 ## Using the module...
 
