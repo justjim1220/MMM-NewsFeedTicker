@@ -1,6 +1,21 @@
+@-webkit-keyframes marquee {
+  0% {left: 90%;}
+  100% {left: -90%;}
+}
+
+@-moz-keyframes marquee {
+  0% {left: 90%;}
+  100% {left: -90%;}
+}
+
+@-o-keyframes marquee {
+  0% {left: 90%;}
+  100% {left: -90%;}
+}
+
 @keyframes marquee {
-  0% {left: 100%;}
-  100% {left: -100%;}
+  0% {left: 90%;}
+  100% {left: -90%;}
 }
 
 .MMM-NewsFeedTicker {
@@ -13,10 +28,10 @@
 }
 
 .MMM-NewsFeedTicker .tickerbody {
-  position: relative;
+  position: absolute;
   bottom: 0;
   left: 0;
-  overflow: visible;
+  overflow: hidden;
   white-space: nowrap;
   text-align: left;
   -webkit-animation: marquee 31s linear;
@@ -27,6 +42,8 @@
 
 .MMM-NewsFeedTicker .headline {
   position: absolute;
+  overflow: hidden;
+  white-space: nowrap;
   padding: 0;
   margin: 0 auto;
   white-space: nowrap;
@@ -37,6 +54,8 @@
   display: inline-block;
   vertical-align: middle;
   margin-left: 0;
+  left: 0;
+  bottom: 0;
   z-index: 1;
   background-color: #666;
 }
