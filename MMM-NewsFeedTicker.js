@@ -13,7 +13,7 @@
  * Brought to you by the makers of Cheyenne Cigars
  * and my very own homemade Southern Sweet Tea.
  *
- */
+*/
 
 Module.register("MMM-NewsFeedTicker", {
 
@@ -22,16 +22,72 @@ Module.register("MMM-NewsFeedTicker", {
         feeds: 
         [
             {
-                title: "NBC Sports NFL News",
-                url: "https://profootballtalk.nbcsports.com/feed/atom/",
+                title: "YiFi - YTS.am",
+                url: "https://yts.am/rss/0/all/all/0",
                 encoding: "UTF-8", //ISO-8859-1
                 className: "myClass",
-                defaultLogo: "",
-                customLogo: "NBCSports-Network"
+                defaultLogo : ""
             },
+            
+            {
+                title: "NFL News",
+                url: "https://www.rotowire.com/rss/news.htm?sport=nfl",
+                encoding: "UTF-8", //ISO-8859-1
+                className: "myClass",
+                defaultLogo : ""
+            },
+            {
+                title: "USA Today",
+                url: "http://rssfeeds.usatoday.com/UsatodaycomNation-TopStories",
+                encoding: "UTF-8", //ISO-8859-1
+                className: "myClass",
+                defaultLogo : ""
+            },
+            {
+                title: "ESPN NFL News",
+                url: "http://www.espn.com/espn/rss/nfl/news",
+                encoding: "UTF-8", //ISO-8859-1
+                className: "myClass",
+                defaultLogo : ""
+            },
+            {
+                title: "Kansas City Fox Sports News",
+                url: "https://api.foxsports.com/v1/rss?partnerKey=zBaFxRyGKCfxBagJG9b8pqLyndmvo7UU&tag=kansas-city",
+                encoding: "UTF-8", //ISO-8859-1
+                className: "myClass",
+                defaultLogo : ""
+            },
+            {
+                title: "New York Times",
+                url: "http://www.nytimes.com/services/xml/rss/nyt/HomePage.xml",
+                encoding: "UTF-8", //ISO-8859-1
+                className: "myClass",
+                defaultLogo : ""
+            },
+            {
+                title: "Fox Sports NFL News",
+                url: "https://api.foxsports.com/v1/rss?partnerKey=zBaFxRyGKCfxBagJG9b8pqLyndmvo7UU&tag=nfl",
+                encoding: "UTF-8", //ISO-8859-1
+                className: "myClass",
+                defaultLogo : ""
+            },
+            {
+                title: "CBS Sports NFL Headlines",
+                url: "https://www.cbssports.com/rss/headlines/nfl/",
+                encoding: "UTF-8", //ISO-8859-1
+                className: "myClass",
+                defaultLogo : ""
+            },
+            {
+                title: "BBC World News",
+                url: "https://www.bbc.com/news/world",
+                encoding: "UTF-8", //ISO-8859-1
+                className: "myClass",
+                defaultLogo : ""
+            }
         ],
 
-        useCustomLogo: true,
+        useCustomLogo: false,
         showMarquee: true,
         showIcon: true,
         showSourceTitle: false,
@@ -45,9 +101,9 @@ Module.register("MMM-NewsFeedTicker", {
         reloadInterval: 60 * 60 * 1000, // every 60 minutes
         updateInterval: 45 * 1000,      // every 45 seconds
         animationSpeed: 50,
-        maxNewsItems: 0, // 0 for unlimited
+        maxNewsItems: 10, // 0 for unlimited
         ignoreOldItems: true,
-        ignoreOlderThan: 2 * 24 * 60 * 60 * 1000, // 2 days
+        ignoreOlderThan: 2 * 60 * 60 * 1000, // 2 days
         removeStartTags: "both",
         removeEndTags: "both",
         startTags: [],
@@ -189,7 +245,7 @@ Module.register("MMM-NewsFeedTicker", {
 
             if (this.config.showSourceTicle) {
             var title = document.createElement("div");
-            title.className = "bright small light" + (!this.config.wrapTitle ? " no-wrap" : "");
+            title.className = "bright medium light" + (!this.config.wrapTitle ? " no-wrap" : "");
             title.innerHTML = this.newsItems[this.activeItem].title;
             wrapper.appendChild(title);
             }
@@ -203,9 +259,15 @@ Module.register("MMM-NewsFeedTicker", {
             }
 
             if (this.config.showMarquee && this.config.showIcon) {
-                var image = document.createElement("img");
-                image.className = "image";
-                image.src = this.newsItems[this.activeItem].logo;
+                if (this.config.useCustomLogo) {
+                    var image = document.createElement("img");
+                    image.className = "image";
+                    image.src = this.newsItems[this.activeItem].customLogo;
+                } else {
+                    var image = document.createElement("img");
+                    image.className = "image";
+                    image.src = this.newsItems[this.activeItem].logo;
+                }
                 wrapper.appendChild(image);
 
                 var tickerBody = document.createElement("div")
@@ -214,10 +276,10 @@ Module.register("MMM-NewsFeedTicker", {
                 tickerBody.addEventListener("animationend", ()=>{
                     headline.innerHTML = ""
                     this.scheduleUpdateInterval()
-                }, false);
+                  }, false);
 
                 var headline = document.createElement("span");
-                headline.className = "bold small bright";
+                headline.className = "bold xlarge bright";
                 headline.innerHTML = "<font color= #ffaa00>" + moment(new Date(this.newsItems[this.activeItem].pubdate)).fromNow() + ": &nbsp;" + "</font>" + this.newsItems[this.activeItem].title + "&nbsp; || &nbsp;" + this.newsItems[this.activeItem].description;
                 tickerBody.appendChild(headline);
 
