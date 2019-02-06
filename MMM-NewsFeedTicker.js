@@ -22,21 +22,6 @@ Module.register("MMM-NewsFeedTicker", {
         feeds: 
         [
             {
-                title: "YiFi - YTS.am",
-                url: "https://yts.am/rss/0/all/all/0",
-                encoding: "UTF-8", //ISO-8859-1
-                className: "myClass",
-                defaultLogo : ""
-            },
-            
-            {
-                title: "NFL News",
-                url: "https://www.rotowire.com/rss/news.htm?sport=nfl",
-                encoding: "UTF-8", //ISO-8859-1
-                className: "myClass",
-                defaultLogo : ""
-            },
-            {
                 title: "USA Today",
                 url: "http://rssfeeds.usatoday.com/UsatodaycomNation-TopStories",
                 encoding: "UTF-8", //ISO-8859-1
@@ -51,29 +36,8 @@ Module.register("MMM-NewsFeedTicker", {
                 defaultLogo : ""
             },
             {
-                title: "Kansas City Fox Sports News",
-                url: "https://api.foxsports.com/v1/rss?partnerKey=zBaFxRyGKCfxBagJG9b8pqLyndmvo7UU&tag=kansas-city",
-                encoding: "UTF-8", //ISO-8859-1
-                className: "myClass",
-                defaultLogo : ""
-            },
-            {
                 title: "New York Times",
                 url: "http://www.nytimes.com/services/xml/rss/nyt/HomePage.xml",
-                encoding: "UTF-8", //ISO-8859-1
-                className: "myClass",
-                defaultLogo : ""
-            },
-            {
-                title: "Fox Sports NFL News",
-                url: "https://api.foxsports.com/v1/rss?partnerKey=zBaFxRyGKCfxBagJG9b8pqLyndmvo7UU&tag=nfl",
-                encoding: "UTF-8", //ISO-8859-1
-                className: "myClass",
-                defaultLogo : ""
-            },
-            {
-                title: "CBS Sports NFL Headlines",
-                url: "https://www.cbssports.com/rss/headlines/nfl/",
                 encoding: "UTF-8", //ISO-8859-1
                 className: "myClass",
                 defaultLogo : ""
@@ -279,7 +243,7 @@ Module.register("MMM-NewsFeedTicker", {
                   }, false);
 
                 var headline = document.createElement("span");
-                headline.className = "bold small bright";
+                headline.className = "headline";
                 headline.innerHTML = "<font color= #ffaa00>" + moment(new Date(this.newsItems[this.activeItem].pubdate)).fromNow() + ": &nbsp;" + "</font>" + this.newsItems[this.activeItem].title + "&nbsp; || &nbsp;" + this.newsItems[this.activeItem].description;
                 tickerBody.appendChild(headline);
 
