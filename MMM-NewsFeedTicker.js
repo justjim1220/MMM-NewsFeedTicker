@@ -60,20 +60,20 @@ Module.register("MMM-NewsFeedTicker", {
         wrapTitle: false,
         wrapDescription: false,
         truncDescription: false,
-        lengthDescription: 1900,
+        lengthDescription: 900,
         hideLoading: false,
         reloadInterval: 60 * 60 * 1000, // every 60 minutes
-        updateInterval: 45 * 1000,      // every 45 seconds
-        animationSpeed: 50,
-        maxNewsItems: 10, // 0 for unlimited
+        updateInterval: 60 * 1000,      // every 45 seconds
+        animationSpeed: 2.5,
+        maxNewsItems: 0, // 0 for unlimited
         ignoreOldItems: true,
-        ignoreOlderThan: 2 * 60 * 60 * 1000, // 2 days
+        ignoreOlderThan: 2 * 24 * 60 * 60 * 1000, // 2 days
         removeStartTags: "both",
         removeEndTags: "both",
         startTags: [],
         endTags: [],
         prohibitedWords: [],
-        scrollLength: "100%",
+        scrollLength: "150%",
         logFeedWarnings: true,
         encoding: "UTF-8", //ISO-8859-1
     },
@@ -240,12 +240,39 @@ Module.register("MMM-NewsFeedTicker", {
                 tickerBody.addEventListener("animationend", ()=>{
                     headline.innerHTML = ""
                     this.scheduleUpdateInterval()
-                  }, false);
+                }, false);
+
+                function calcSpeed(speed) {
+                    // Time = Distance/Speed
+                    var divSelector = document.querySelectorAll(".tickerbody"),
+                      i;
+                    for (i = 0; i < divSelector.length; i++) {
+                      var divLength = divSelector[i].offsetWidth,
+                      timeTaken = divLength / speed;
+                      divSelector[i].style.animationDuration = timeTaken + "s";
+                    }
+                }
+                calcSpeed(100);
 
                 var headline = document.createElement("span");
                 headline.className = "headline";
                 headline.innerHTML = "<font color= #ffaa00>" + moment(new Date(this.newsItems[this.activeItem].pubdate)).fromNow() + ": &nbsp;" + "</font>" + this.newsItems[this.activeItem].title + "&nbsp; || &nbsp;" + this.newsItems[this.activeItem].description;
+                var headline = document.createElement("span");
+                headline.className = "headline";
+                headline.innerHTML = "<font color= #ffaa00>" + moment(new Date(this.newsItems[this.activeItem].pubdate)).fromNow() + ": &nbsp;" + "</font>" + this.newsItems[this.activeItem].title + "&nbsp; || &nbsp;" + this.newsItems[this.activeItem].description;
                 tickerBody.appendChild(headline);
+
+                function calcSpeed(speed) {
+                    // Time = Distance/Speed
+                    var spanSelector = document.querySelectorAll(".headline"),
+                      i;
+                    for (i = 0; i < spanSelector.length; i++) {
+                      var spanLength = spanSelector[i].offsetWidth,
+                      timeTaken = spanLength / speed;
+                      spanSelector[i].style.animationDuration = timeTaken + "s";
+                    }
+                }
+                calcSpeed(100);
 
                 wrapper.appendChild(tickerBody);
             }
