@@ -236,7 +236,7 @@ Module.register("MMM-NewsFeedTicker", {
 
                 var tickerBody = document.createElement("div")
                 tickerBody.className = "tickerbody"
-                tickerBody.style.animationDuration = Math.round(this.config.updateInterval / 1000) + "s";
+                tickerBody.style.animationDuration = Math.round(this.config.updateInterval / 300) + "s";
                 tickerBody.addEventListener("animationend", ()=>{
                     headline.innerHTML = ""
                     this.scheduleUpdateInterval()
