@@ -13,41 +13,39 @@
  * Brought to you by the makers of Cheyenne Cigars
  * and my very own homemade Southern Sweet Tea.
  *
-*/
+ */
 
 Module.register("MMM-NewsFeedTicker", {
 
     // Default module config.
     defaults: {
-        feeds: 
-        [
-            {
+        feeds: [{
                 title: "USA Today",
                 url: "http://rssfeeds.usatoday.com/UsatodaycomNation-TopStories",
                 encoding: "UTF-8", //ISO-8859-1
                 className: "myClass",
-                defaultLogo : ""
+                defaultLogo: ""
             },
             {
                 title: "ESPN NFL News",
                 url: "http://www.espn.com/espn/rss/nfl/news",
                 encoding: "UTF-8", //ISO-8859-1
                 className: "myClass",
-                defaultLogo : ""
+                defaultLogo: ""
             },
             {
                 title: "New York Times",
                 url: "http://www.nytimes.com/services/xml/rss/nyt/HomePage.xml",
                 encoding: "UTF-8", //ISO-8859-1
                 className: "myClass",
-                defaultLogo : ""
+                defaultLogo: ""
             },
             {
                 title: "BBC World News",
                 url: "https://www.bbc.com/news/world",
                 encoding: "UTF-8", //ISO-8859-1
                 className: "myClass",
-                defaultLogo : ""
+                defaultLogo: ""
             }
         ],
 
@@ -63,7 +61,7 @@ Module.register("MMM-NewsFeedTicker", {
         lengthDescription: 900,
         hideLoading: false,
         reloadInterval: 60 * 60 * 1000, // every 60 minutes
-        updateInterval: 60 * 1000,      // every 45 seconds
+        updateInterval: 60 * 1000, // every 45 seconds
         animationSpeed: 2.5,
         maxNewsItems: 0, // 0 for unlimited
         ignoreOldItems: true,
@@ -78,10 +76,10 @@ Module.register("MMM-NewsFeedTicker", {
         encoding: "UTF-8", //ISO-8859-1
     },
 
-  requiresversion: "2.1.0",
+    requiresversion: "2.1.0",
 
     // Define required scripts.
-    getScripts: function () {
+    getScripts: function() {
         return ["moment.js"];
     },
 
@@ -90,7 +88,7 @@ Module.register("MMM-NewsFeedTicker", {
     },
 
     // Define required translations.
-    getTranslations: function () {
+    getTranslations: function() {
         // The translations for the default modules are defined in the core translation files.
         // Therefor we can just return false. Otherwise we should have returned a dictionary.
         // If you're trying to build your own module including translations, check out the documentation.
@@ -98,7 +96,7 @@ Module.register("MMM-NewsFeedTicker", {
     },
 
     // Define start sequence.
-    start: function () {
+    start: function() {
         Log.info("Starting module: " + this.name);
 
         // Set locale.
@@ -117,7 +115,7 @@ Module.register("MMM-NewsFeedTicker", {
     },
 
     // Override socket notification handler.
-    socketNotificationReceived: function (notification, payload) {
+    socketNotificationReceived: function(notification, payload) {
         if (notification === "NEWS_ITEMS") {
             this.generateFeed(payload);
 
@@ -130,7 +128,7 @@ Module.register("MMM-NewsFeedTicker", {
     },
 
     // Override dom generator.
-    getDom: function () {
+    getDom: function() {
         var wrapper = document.createElement("div");
 
         if (this.config.feedUrl) {
@@ -208,18 +206,18 @@ Module.register("MMM-NewsFeedTicker", {
             }
 
             if (this.config.showSourceTicle) {
-            var title = document.createElement("div");
-            title.className = "bright medium light" + (!this.config.wrapTitle ? " no-wrap" : "");
-            title.innerHTML = this.newsItems[this.activeItem].title;
-            wrapper.appendChild(title);
+                var title = document.createElement("div");
+                title.className = "bright medium light" + (!this.config.wrapTitle ? " no-wrap" : "");
+                title.innerHTML = this.newsItems[this.activeItem].title;
+                wrapper.appendChild(title);
             }
 
             if (this.isShowingDescription) {
-            var description = document.createElement("div");
-            description.className = "light" + (!this.config.wrapDescription ? " no-wrap" : "");
-            var txtDesc = this.newsItems[this.activeItem].description;
-            description.innerHTML = (this.config.truncDescription ? (txtDesc.length > this.config.lengthDescription ? txtDesc.substring(0, this.config.lengthDescription) + "..." : txtDesc) : txtDesc);
-            wrapper.appendChild(description);
+                var description = document.createElement("div");
+                description.className = "light" + (!this.config.wrapDescription ? " no-wrap" : "");
+                var txtDesc = this.newsItems[this.activeItem].description;
+                description.innerHTML = (this.config.truncDescription ? (txtDesc.length > this.config.lengthDescription ? txtDesc.substring(0, this.config.lengthDescription) + "..." : txtDesc) : txtDesc);
+                wrapper.appendChild(description);
             }
 
             if (this.config.showMarquee && this.config.showIcon) {
@@ -236,8 +234,8 @@ Module.register("MMM-NewsFeedTicker", {
 
                 var tickerBody = document.createElement("div")
                 tickerBody.className = "tickerbody"
-                tickerBody.style.animationDuration = Math.round(this.config.updateInterval / 300) + "s";
-                tickerBody.addEventListener("animationend", ()=>{
+                tickerBody.style.animationDuration = Math.round(this.config.updateInterval / 1000) + "s";
+                tickerBody.addEventListener("animationend", () => {
                     headline.innerHTML = ""
                     this.scheduleUpdateInterval()
                 }, false);
@@ -245,14 +243,14 @@ Module.register("MMM-NewsFeedTicker", {
                 function calcSpeed(speed) {
                     // Time = Distance/Speed
                     var divSelector = document.querySelectorAll(".tickerbody"),
-                      i;
+                        i;
                     for (i = 0; i < divSelector.length; i++) {
-                      var divLength = divSelector[i].offsetWidth,
-                      timeTaken = divLength / speed;
-                      divSelector[i].style.animationDuration = timeTaken + "s";
+                        var divLength = divSelector[i].offsetWidth,
+                            timeTaken = divLength / speed;
+                        divSelector[i].style.animationDuration = timeTaken + "s";
                     }
                 }
-                calcSpeed(100);
+                calcSpeed(1000);
 
                 var headline = document.createElement("span");
                 headline.className = "headline";
@@ -265,11 +263,11 @@ Module.register("MMM-NewsFeedTicker", {
                 function calcSpeed(speed) {
                     // Time = Distance/Speed
                     var spanSelector = document.querySelectorAll(".headline"),
-                      i;
+                        i;
                     for (i = 0; i < spanSelector.length; i++) {
-                      var spanLength = spanSelector[i].offsetWidth,
-                      timeTaken = spanLength / speed;
-                      spanSelector[i].style.animationDuration = timeTaken + "s";
+                        var spanLength = spanSelector[i].offsetWidth,
+                            timeTaken = spanLength / speed;
+                        spanSelector[i].style.animationDuration = timeTaken + "s";
                     }
                 }
                 calcSpeed(100);
@@ -308,10 +306,10 @@ Module.register("MMM-NewsFeedTicker", {
         return wrapper;
     },
 
-  /* registerFeeds()
-   * registers the feeds to be used by the backend.
-   */
-    registerFeeds: function () {
+    /* registerFeeds()
+     * registers the feeds to be used by the backend.
+     */
+    registerFeeds: function() {
         for (var f in this.config.feeds) {
             var feed = this.config.feeds[f];
             this.sendSocketNotification("ADD_FEED", {
@@ -321,12 +319,12 @@ Module.register("MMM-NewsFeedTicker", {
         }
     },
 
-  /* generateFeed()
-   * Generate an ordered list of items for this configured module.
-   *
-   * attribute feeds object - An object with feeds returned by the node helper.
-   */
-    generateFeed: function (feeds) {
+    /* generateFeed()
+     * Generate an ordered list of items for this configured module.
+     *
+     * attribute feeds object - An object with feeds returned by the node helper.
+     */
+    generateFeed: function(feeds) {
         var newsItems = [];
         for (var feed in feeds) {
             var feedItems = feeds[feed];
@@ -340,7 +338,7 @@ Module.register("MMM-NewsFeedTicker", {
                 }
             }
         }
-        newsItems.sort(function (a, b) {
+        newsItems.sort(function(a, b) {
             var dateA = new Date(a.pubdate);
             var dateB = new Date(b.pubdate);
             return dateB - dateA;
@@ -351,7 +349,7 @@ Module.register("MMM-NewsFeedTicker", {
         }
 
         if (this.config.prohibitedWords.length > 0) {
-            newsItems = newsItems.filter(function (value) {
+            newsItems = newsItems.filter(function(value) {
                 for (var i = 0; i < this.config.prohibitedWords.length; i++) {
                     if (value["title"].toLowerCase().indexOf(this.config.prohibitedWords[i].toLowerCase()) > -1) {
                         return false;
@@ -364,14 +362,14 @@ Module.register("MMM-NewsFeedTicker", {
         this.newsItems = newsItems;
     },
 
-  /* subscribedToFeed(feedUrl)
-   * Check if this module is configured to show this feed.
-   *
-   * attribute feedUrl string - Url of the feed to check.
-   *
-   * returns bool
-   */
-    subscribedToFeed: function (feedUrl) {
+    /* subscribedToFeed(feedUrl)
+     * Check if this module is configured to show this feed.
+     *
+     * attribute feedUrl string - Url of the feed to check.
+     *
+     * returns bool
+     */
+    subscribedToFeed: function(feedUrl) {
         for (var f in this.config.feeds) {
             var feed = this.config.feeds[f];
             if (feed.url === feedUrl) {
@@ -381,14 +379,14 @@ Module.register("MMM-NewsFeedTicker", {
         return false;
     },
 
-  /* titleForFeed(feedUrl)
-   * Returns title for a specific feed Url.
-   *
-   * attribute feedUrl string - Url of the feed to check.
-   *
-   * returns string
-   */
-    titleForFeed: function (feedUrl) {
+    /* titleForFeed(feedUrl)
+     * Returns title for a specific feed Url.
+     *
+     * attribute feedUrl string - Url of the feed to check.
+     *
+     * returns string
+     */
+    titleForFeed: function(feedUrl) {
         for (var f in this.config.feeds) {
             var feed = this.config.feeds[f];
             if (feed.url === feedUrl) {
@@ -408,32 +406,32 @@ Module.register("MMM-NewsFeedTicker", {
         return "";
     },
 
-  /* scheduleUpdateInterval()
-   * Schedule visual update.
-   */
-    scheduleUpdateInterval: function () {
+    /* scheduleUpdateInterval()
+     * Schedule visual update.
+     */
+    scheduleUpdateInterval: function() {
         var self = this;
 
         self.updateDom(self.config.animationSpeed);
 
-        timer = setInterval(function () {
+        timer = setInterval(function() {
             self.activeItem++;
             self.updateDom(self.config.animationSpeed);
         }, this.config.updateInterval);
     },
 
-  /* capitalizeFirstLetter(string)
-   * Capitalizes the first character of a string.
-   *
-   * argument string string - Input string.
-   *
-   * return string - Capitalized output string.
-   */
-    capitalizeFirstLetter: function (string) {
+    /* capitalizeFirstLetter(string)
+     * Capitalizes the first character of a string.
+     *
+     * argument string string - Input string.
+     *
+     * return string - Capitalized output string.
+     */
+    capitalizeFirstLetter: function(string) {
         return string.charAt(0).toUpperCase() + string.slice(1);
     },
 
-    resetDescrOrFullArticleAndTimer: function () {
+    resetDescrOrFullArticleAndTimer: function() {
         this.isShowingDescription = this.config.showDescription;
         this.config.showFullArticle = false;
         this.scrollPosition = 0;
@@ -445,7 +443,7 @@ Module.register("MMM-NewsFeedTicker", {
         }
     },
 
-    notificationReceived: function (notification, payload, sender) {
+    notificationReceived: function(notification, payload, sender) {
         Log.info(this.name + " - received notification: " + notification);
         if (notification == "ARTICLE_NEXT") {
             var before = this.activeItem;
@@ -474,10 +472,9 @@ Module.register("MMM-NewsFeedTicker", {
                 window.scrollTo(0, this.scrollPosition);
                 Log.info(this.name + " - scrolling left");
                 Log.info(this.name + " - ARTICLE_MORE_DETAILS, scroll position: " + this.config.scrollLength);
+            } else {
+                this.showFullArticle();
             }
-      else {
-        this.showFullArticle();
-      }
         } else if (notification == "ARTICLE_SCROLL_UP") {
             if (this.config.showFullArticle == true) {
                 this.scrollPosition -= this.config.scrollLength;
@@ -489,30 +486,30 @@ Module.register("MMM-NewsFeedTicker", {
             this.resetDescrOrFullArticleAndTimer();
             Log.info(this.name + " - showing only article titles again");
             this.updateDom(100);
-    } else if (notification === "ARTICLE_TOGGLE_FULL"){
-      if (this.config.showFullArticle){
-        this.activeItem++;
-        this.resetDescrOrFullArticleAndTimer();
-      } else {
-        this.showFullArticle();
-      }
-    } else {
-      Log.info(this.name + " - unknown notification, ignoring: " + notification);
-    }
-  },
+        } else if (notification === "ARTICLE_TOGGLE_FULL") {
+            if (this.config.showFullArticle) {
+                this.activeItem++;
+                this.resetDescrOrFullArticleAndTimer();
+            } else {
+                this.showFullArticle();
+            }
+        } else {
+            Log.info(this.name + " - unknown notification, ignoring: " + notification);
+        }
+    },
 
-  showFullArticle: function() {
-    this.isShowingDescription = !this.isShowingDescription;
-    this.config.showFullArticle = !this.isShowingDescription;
-    // make bottom bar align to top to allow scrolling
-    if(this.config.showFullArticle === true){
-      document.getElementsByClassName("region top bar")[0].style.bottom = "inherit";
-      document.getElementsByClassName("region top bar")[0].style.top = "-90px";
+    showFullArticle: function() {
+        this.isShowingDescription = !this.isShowingDescription;
+        this.config.showFullArticle = !this.isShowingDescription;
+        // make bottom bar align to top to allow scrolling
+        if (this.config.showFullArticle === true) {
+            document.getElementsByClassName("region top bar")[0].style.bottom = "inherit";
+            document.getElementsByClassName("region top bar")[0].style.top = "-90px";
+        }
+        clearInterval(timer);
+        timer = null;
+        Log.info(this.name + " - showing " + this.isShowingDescription ? "article description" : "full article");
+        this.updateDom(100);
     }
-    clearInterval(timer);
-    timer = null;
-    Log.info(this.name + " - showing " + this.isShowingDescription ? "article description" : "full article");
-    this.updateDom(100);
-  }
 
 });

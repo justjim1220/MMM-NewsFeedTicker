@@ -1,91 +1,94 @@
 @-webkit-keyframes marquee {
-  0% {
-    transform: translateX(100%);
-  }
-  100% {
-    transform: translateX(-100%);
-  }
+    0% {
+        transform: translateX(100%);
+    }
+    100% {
+        transform: translateX(-100%);
+    }
 }
 
 @-moz-keyframes marquee {
-  0% {
-    transform: translateX(100%);
-  }
-  100% {
-    transform: translateX(-100%);
-  }
+    0% {
+        transform: translateX(100%);
+    }
+    100% {
+        transform: translateX(-100%);
+    }
 }
 
 @-ms-keyframes marquee {
-  0% {
-    transform: translateX(100%);
-  }
-  100% {
-    transform: translateX(-100%);
-  }
+    0% {
+        transform: translateX(100%);
+    }
+    100% {
+        transform: translateX(-100%);
+    }
 }
 
 @-o-keyframes marquee {
-  0% {
-    transform: translateX(100%);
-  }
-  100% {
-    transform: translateX(-100%);
-  }
+    0% {
+        transform: translateX(100%);
+    }
+    100% {
+        transform: translateX(-100%);
+    }
 }
 
 @keyframes marquee {
-  0% {
-    transform: translateX(100%);
-  }
-  100% {
-    transform: translateX(-100%);
-  }
+    0% {
+        transform: translateX(100%);
+    }
+    100% {
+        transform: translateX(-100%);
+    }
 }
 
 .MMM-NewsFeedTicker {
-  width: 100%;
-  height: 40px;
-  line-height: 100%;
-  overflow: hidden;
-  overflow-x: hidden;
-  background: none;
+    width: 100%;
+    height: 50px;
+    line-height: 100%;
+    overflow: hidden;
+    overflow-x: hidden;
+    background: rgb(104, 9, 9);
 }
 
 .MMM-NewsFeedTicker .tickerbody {
-  position: absolute;
-  bottom: 15px;
-  right: 0;
-  white-space: nowrap;
-  text-align: left;
-  /* Starting position */
-  -webkit-transform:translateX(100%);
-  -moz-transform:translateX(100%);
-  -ms-transform:translateX(100%);
-  -o-transform:translateX(100%);
-  transform:translateX(100%);
-  -webkit-animation: marquee linear infinite;
-  -moz-animation: marquee linear infinite;
-  -ms-animation: marquee linear infinite;
-  -o-animation: marquee linear infinite;
-  animation: marquee linear infinite;
+    width: 100%;
+    position: absolute;
+    bottom: 15px;
+    right: 0;
+    white-space: nowrap;
+    text-align: left;
+    vertical-align: middle;
+    /* Starting position */
+    -webkit-transform: translateX(100%);
+    -moz-transform: translateX(100%);
+    -ms-transform: translateX(100%);
+    -o-transform: translateX(100%);
+    transform: translateX(100%);
+    -webkit-animation: marquee linear infinite;
+    -moz-animation: marquee linear infinite;
+    -ms-animation: marquee linear infinite;
+    -o-animation: marquee linear infinite;
+    animation: marquee linear infinite;
 }
 
 .MMM-NewsFeedTicker .headline {
-  font-size: 35px;
-  padding-top: 15px;
-  overflow: hidden;
-  margin: 0 auto;
-  white-space: nowrap;
+    font-size: 35px;
+    padding-top: 15px;
+    overflow: hidden;
+    margin: 0 auto;
+    white-space: nowrap;
+    vertical-align: middle;
 }
 
 .MMM-NewsFeedTicker .image {
-  position: absolute;
-  display: inline-block;
-  vertical-align: middle;
-  bottom: 0;
-  left: 0;
-  height: 50px;
-  z-index: 10;
-  background-color: #FFF;
+    position: absolute;
+    display: inline-block;
+    vertical-align: middle;
+    bottom: 0;
+    left: 0;
+    height: 50px;
+    z-index: 10;
+    background-color: #FFF;
 }
