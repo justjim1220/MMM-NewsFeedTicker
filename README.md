@@ -62,7 +62,21 @@ to change or add feedsources... you need to make sure the site can be linked
 Hope you all like it!
 ```
 
+## Configurations...
+to change background color, add the following to you custom.css file:
+```
+.MMM-NewsFeedTicker {
+    background: rgb(104, 9, 9); // to change background color, can use rgb. hex, or name of the color
+}
+```
+to remove background color, change to ``` background: none; ```
 
+some users are having issues with speed of the animation.
+go to the following line in the MMM-NewsFeedTicker.js file and change the number ``` 1000 ``` to a lower number.
+(some users are finding that changing to 300 works best for them, adjust to your preference)
+```
+    tickerBody.style.animationDuration = Math.round(this.config.updateInterval / 1000) + "s";
+```
 
 ## Acknowledgements...
 First, I want to thank @sdetweil, @Sean, @cowboysdude, & @Mykle1 for their patience in attempting to teach me this coding stuff!!!
