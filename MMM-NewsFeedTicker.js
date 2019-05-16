@@ -21,37 +21,30 @@ Module.register("MMM-NewsFeedTicker", {
     defaults: {
         feeds: [{
                 title: "USA Today",
-                url: "http://rssfeeds.usatoday.com/UsatodaycomNation-TopStories",
-                encoding: "UTF-8", //ISO-8859-1
-                className: "myClass",
-                defaultLogo: ""
+                url: "http://rssfeeds.usatoday.com/UsatodaycomNation-TopStories"
             },
             {
                 title: "ESPN NFL News",
-                url: "http://www.espn.com/espn/rss/nfl/news",
-                encoding: "UTF-8", //ISO-8859-1
-                className: "myClass",
-                defaultLogo: ""
+                url: "http://www.espn.com/espn/rss/nfl/news"
             },
             {
                 title: "New York Times",
-                url: "http://www.nytimes.com/services/xml/rss/nyt/HomePage.xml",
-                encoding: "UTF-8", //ISO-8859-1
-                className: "myClass",
-                defaultLogo: ""
+                url: "http://www.nytimes.com/services/xml/rss/nyt/HomePage.xml"
             },
             {
                 title: "BBC World News",
-                url: "https://www.bbc.com/news/world",
-                encoding: "UTF-8", //ISO-8859-1
-                className: "myClass",
-                defaultLogo: ""
+                url: "https://www.bbc.com/news/world"
+            },
+            {
+                title: "South Africa News 24",
+                url: "http://feeds.news24.com/articles/news24/SouthAfrica/rss",
+                customLogo: "news24.png"
             }
         ],
 
-        useCustomLogo: false,
         showMarquee: true,
         showIcon: true,
+        useCustomLogo: false,
         showSourceTitle: false,
         showPublishDate: false,
         showDescription: false,
@@ -221,56 +214,44 @@ Module.register("MMM-NewsFeedTicker", {
             }
 
             if (this.config.showMarquee && this.config.showIcon) {
-                if (this.config.useCustomLogo) {
-                    var image = document.createElement("img");
-                    image.className = "image";
-                    image.src = this.newsItems[this.activeItem].customLogo;
-                } else {
+                if (!this.config.useCustomLogo) {
                     var image = document.createElement("img");
                     image.className = "image";
                     image.src = this.newsItems[this.activeItem].logo;
+                } else {
+                    var image = document.createElement("img");
+                    image.className = "image";
+                    image.src = this.newsItems[this.activeItem].customLogo;
                 }
                 wrapper.appendChild(image);
 
                 var tickerBody = document.createElement("div")
-                tickerBody.className = "tickerbody"
+                tickerBody.className = "tickerbody";
+
+                var headline = document.createElement("span");
+                headline.className = "headline";
                 tickerBody.style.animationDuration = Math.round(this.config.updateInterval / 1000) + "s";
                 tickerBody.addEventListener("animationend", () => {
-                    headline.innerHTML = ""
-                    this.scheduleUpdateInterval()
+                    headline.innerHTML = "";
+                    this.scheduleUpdateInterval();
                 }, false);
 
-                function calcSpeed(speed) {
-                    // Time = Distance/Speed
-                    var divSelector = document.querySelectorAll(".tickerbody"),
-                        i;
-                    for (i = 0; i < divSelector.length; i++) {
-                        var divLength = divSelector[i].offsetWidth,
-                            timeTaken = divLength / speed;
-                        divSelector[i].style.animationDuration = timeTaken + "s";
-                    }
-                }
-                calcSpeed(1000);
-
-                var headline = document.createElement("span");
-                headline.className = "headline";
                 headline.innerHTML = "<font color= #ffaa00>" + moment(new Date(this.newsItems[this.activeItem].pubdate)).fromNow() + ": &nbsp;" + "</font>" + this.newsItems[this.activeItem].title + "&nbsp; || &nbsp;" + this.newsItems[this.activeItem].description;
-                var headline = document.createElement("span");
-                headline.className = "headline";
-                headline.innerHTML = "<font color= #ffaa00>" + moment(new Date(this.newsItems[this.activeItem].pubdate)).fromNow() + ": &nbsp;" + "</font>" + this.newsItems[this.activeItem].title + "&nbsp; || &nbsp;" + this.newsItems[this.activeItem].description;
-                tickerBody.appendChild(headline);
 
                 function calcSpeed(speed) {
                     // Time = Distance/Speed
-                    var spanSelector = document.querySelectorAll(".headline"),
+                    var spanSelector = document.querySelectorAll("headline"),
                         i;
                     for (i = 0; i < spanSelector.length; i++) {
                         var spanLength = spanSelector[i].offsetWidth,
                             timeTaken = spanLength / speed;
-                        spanSelector[i].style.animationDuration = timeTaken + "s";
+                        spanSelector[i].style.updateInterval = timeTaken + "s";
                     }
                 }
                 calcSpeed(100);
+
+
+                tickerBody.appendChild(headline);
 
                 wrapper.appendChild(tickerBody);
             }
