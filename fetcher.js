@@ -30,6 +30,34 @@ var Fetcher = function(url, reloadInterval, encoding, logFeedWarnings, defaultLo
 	var fetchFailedCallback = function() {};
 	var itemsReceivedCallback = function() {};
 
+  var getFeedItemicon= function(item){
+    var iconurl='';
+   // loop thru the elements of this item object
+   outer:   for(var el of Object.keys(item)){
+        // if the element is itself an object (not just string)
+       // console.log("element "+el+" typeof ="+typeof item[el])        
+        if(typeof item[el] == 'object') {
+          // loop thru ITS attributes
+          for(var attrib of Object.keys(item[el])){  
+          //  console.log("attribute="+attrib + " type ="+typeof attrib)
+            try {
+              // get lowercase string for easy comparisons             
+              var f = item[el][attrib].toLowerCase();
+              // if this string contains one of the three icon types in rss
+              if(f.includes('.png') || f.includes('.gif') || f.includes('.jpg')){
+                 // then save its link
+           //      console.log("have rss entry icon="+f)
+                iconurl = item[el][attrib];
+                // don't need to look anymore
+                break outer;
+              }
+            }
+            catch(exception){}            
+          }
+        }
+      } 
+    return iconurl;
+  }
 	/* private methods */
 
 	/* fetchNews()
@@ -48,6 +76,7 @@ var Fetcher = function(url, reloadInterval, encoding, logFeedWarnings, defaultLo
 			var description = item.description || item.summary || item.content || "";
 			var pubdate = item.pubdate || item.published || item.updated || item["dc:date"];
 			var url = item.url || item.link || "";
+      var icon= getFeedItemicon(item)
 
 			if (title && pubdate) {
 				var regex = /(<([^>]+)>)/ig;
@@ -58,7 +87,8 @@ var Fetcher = function(url, reloadInterval, encoding, logFeedWarnings, defaultLo
 					description: description,
 					pubdate: pubdate,
 					url: url,
-					logo: defaultLogo
+					logo: defaultLogo,
+          icon: icon
 				});
 
 			} else if (logFeedWarnings) {
