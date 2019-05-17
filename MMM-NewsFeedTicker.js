@@ -213,21 +213,22 @@ Module.register("MMM-NewsFeedTicker", {
                 wrapper.appendChild(description);
             }
             // if icon requested
-            if (this.config.showMarquee && this.config.showIcon) {
-                // and there is one
+            if (this.config.showMarquee && this.config.showIcon) {               
+                // if there is an image in the feed item
                 if(this.newsItems[this.activeItem].icon!==''){
+                  var image = document.createElement("img");
+                  image.className = "image";
                   // display it as requested
-                  if (!this.config.useCustomLogo) {
-                      var image = document.createElement("img");
-                      image.className = "image";
-                      image.src = this.newsItems[this.activeItem].icon;
-                  } else {
-                      var image = document.createElement("img");
-                      image.className = "image";
-                      image.src = this.newsItems[this.activeItem].customLogo;
+                  image.src = this.newsItems[this.activeItem].icon;
+                  wrapper.appendChild(image);                
+                } else {
+                  if(this.newsItems[this.activeItem].customLogo !== undefined ){
+                    var image = document.createElement("img");
+                    image.className = "image";
+                    image.src = "file:///"+this.data.path+"/pics/"+this.newsItems[this.activeItem].customLogo;
+                    wrapper.appendChild(image);
                   }
-                  wrapper.appendChild(image);
-                }
+                }              
 
                 var tickerBody = document.createElement("div")
                 tickerBody.className = "tickerbody";
