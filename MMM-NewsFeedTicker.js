@@ -212,18 +212,22 @@ Module.register("MMM-NewsFeedTicker", {
                 description.innerHTML = (this.config.truncDescription ? (txtDesc.length > this.config.lengthDescription ? txtDesc.substring(0, this.config.lengthDescription) + "..." : txtDesc) : txtDesc);
                 wrapper.appendChild(description);
             }
-
+            // if icon requested
             if (this.config.showMarquee && this.config.showIcon) {
-                if (!this.config.useCustomLogo) {
-                    var image = document.createElement("img");
-                    image.className = "image";
-                    image.src = this.newsItems[this.activeItem].logo;
-                } else {
-                    var image = document.createElement("img");
-                    image.className = "image";
-                    image.src = this.newsItems[this.activeItem].customLogo;
+                // and there is one
+                if(this.newsItems[this.activeItem].icon!==''){
+                  // display it as requested
+                  if (!this.config.useCustomLogo) {
+                      var image = document.createElement("img");
+                      image.className = "image";
+                      image.src = this.newsItems[this.activeItem].icon;
+                  } else {
+                      var image = document.createElement("img");
+                      image.className = "image";
+                      image.src = this.newsItems[this.activeItem].customLogo;
+                  }
+                  wrapper.appendChild(image);
                 }
-                wrapper.appendChild(image);
 
                 var tickerBody = document.createElement("div")
                 tickerBody.className = "tickerbody";
