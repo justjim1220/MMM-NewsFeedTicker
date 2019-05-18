@@ -19,7 +19,8 @@ Module.register("MMM-NewsFeedTicker", {
 
     // Default module config.
     defaults: {
-       /* feeds: [{
+        feeds: [
+            {
                 title: "USA Today",
                 url: "http://rssfeeds.usatoday.com/UsatodaycomNation-TopStories"
             },
@@ -37,10 +38,9 @@ Module.register("MMM-NewsFeedTicker", {
             },
             {
                 title: "South Africa News 24",
-                url: "http://feeds.news24.com/articles/news24/SouthAfrica/rss",
-                customLogo: "news24.png"
+                url: "http://feeds.news24.com/articles/news24/SouthAfrica/rss"
             }
-        ],*/
+        ],
 
         showMarquee: true,
         showIcon: true,
