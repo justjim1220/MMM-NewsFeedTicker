@@ -51,7 +51,11 @@ git clone https://github.com/justjim1220/MMM-NewsFeedTicker.git
 ## Other Info...
 ```
 can add as many feeds as you like.
-to change or add feedsources... you need to make sure the site can be linked 
+to change or add feedsources... you need to make sure the site can be linked
+
+*** At this point, you need to download the website logo and place it in the pics folder within the
+MMM-NewsFeedTicker directory. Then put the name of it in the config for 'customLogo'
+(see config example above)
  
 Hope you all like it!
 ```
