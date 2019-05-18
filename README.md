@@ -23,24 +23,15 @@ modules: [
 	    feeds: [
 		{
 			title: "New York Times",
-			url: "http://www.nytimes.com/services/xml/rss/nyt/HomePage.xml",
-			encoding: "UTF-8", //ISO-8859-1
-			className: "myClass",
-			defaultLogo : ""
+			url: "http://www.nytimes.com/services/xml/rss/nyt/HomePage.xml"
 		},
 		{
 			title: "USA Today",
-			url: "http://rssfeeds.usatoday.com/UsatodaycomNation-TopStories",
-			encoding: "UTF-8", //ISO-8859-1
-			className: "myClass",
-			defaultLogo : ""
+			url: "http://rssfeeds.usatoday.com/UsatodaycomNation-TopStories"
 		},
 		{
 			title: "BBC World News",
-			url: "http://feeds.bbci.co.uk/news/world/rss.xml#",
-			encoding: "UTF-8", //ISO-8859-1
-			className: "myClass",
-			defaultLogo : ""
+			url: "http://feeds.bbci.co.uk/news/world/rss.xml#"
 		}
     	    ]
 	}
