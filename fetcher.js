@@ -87,6 +87,7 @@ var Fetcher = function(url, reloadInterval, encoding, logFeedWarnings, defaultLo
 			var description = item.description || item.summary || item.content || "";
 			var pubdate = item.pubdate || item.published || item.updated || item["dc:date"];
 			var url = item.url || item.link || "";
+
       //console.log(" item.logo ="+ item.logo)
       //console.log(" feed.logo ="+ feedlogo)
       //console.log(" found .logo ="+ getFeedItemLogo(item))
