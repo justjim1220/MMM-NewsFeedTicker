@@ -91,7 +91,7 @@ var Fetcher = function(url, reloadInterval, encoding, logFeedWarnings, defaultLo
       console.log(" feed.logo ="+ feedlogo)
       console.log(" found .logo ="+ getFeedItemLogo(item))
       console.log(" default logo ="+ defaultlogo)
-      logo= item.logo || getFeedItemLogo(item) || /*feedlogo || */ defaultLogo;
+      logo= item.logo || getFeedItemLogo(item) || feedlogo ||  defaultLogo;
 
 			if (title && pubdate) {
 				var regex = /(<([^>]+)>)/ig;
