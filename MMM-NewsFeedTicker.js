@@ -19,7 +19,7 @@ Module.register("MMM-NewsFeedTicker", {
 
     // Default module config.
     defaults: {
-        feeds: [{
+       /* feeds: [{
                 title: "USA Today",
                 url: "http://rssfeeds.usatoday.com/UsatodaycomNation-TopStories"
             },
@@ -40,7 +40,7 @@ Module.register("MMM-NewsFeedTicker", {
                 url: "http://feeds.news24.com/articles/news24/SouthAfrica/rss",
                 customLogo: "news24.png"
             }
-        ],
+        ],*/
 
         showMarquee: true,
         showIcon: true,
@@ -292,6 +292,8 @@ Module.register("MMM-NewsFeedTicker", {
     registerFeeds: function() {
         for (var f in this.config.feeds) {
             var feed = this.config.feeds[f];
+            if(feed.customLogo!== undefined)
+              feed.customLogo = this.data.path+"pics/"+feed.customLogo;            
             this.sendSocketNotification("ADD_FEED", {
                 feed: feed,
                 config: this.config
