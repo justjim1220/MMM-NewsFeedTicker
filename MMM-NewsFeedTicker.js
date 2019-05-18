@@ -21,42 +21,26 @@ Module.register("MMM-NewsFeedTicker", {
     defaults: {
         feeds: [
             {
-                title: "USA Today",
-                url: "http://rssfeeds.usatoday.com/UsatodaycomNation-TopStories"
-            },
-            {
-                title: "ESPN NFL News",
-                url: "http://www.espn.com/espn/rss/nfl/news"
-            },
-            {
-                title: "New York Times",
-                url: "http://www.nytimes.com/services/xml/rss/nyt/HomePage.xml"
-            },
-            {
-                title: "BBC World News",
-                url: "https://www.bbc.com/news/world"
-            },
-            {
                 title: "South Africa News 24",
-                url: "http://feeds.news24.com/articles/news24/SouthAfrica/rss"
+                url: "http://feeds.news24.com/articles/news24/SouthAfrica/rss",
+                customLogo: "news24.png"
             }
         ],
 
         showMarquee: true,
         showIcon: true,
-        useCustomLogo: false,
         showSourceTitle: false,
         showPublishDate: false,
         showDescription: false,
         wrapTitle: false,
         wrapDescription: false,
         truncDescription: false,
-        lengthDescription: 900,
+        lengthDescription: 4000,
         hideLoading: false,
         reloadInterval: 60 * 60 * 1000, // every 60 minutes
-        updateInterval: 60 * 1000, // every 45 seconds
-        animationSpeed: 2.5,
-        maxNewsItems: 0, // 0 for unlimited
+        updateInterval: 60 * 1000, // every 60 seconds
+        animationSpeed: 2 * 1000,
+        maxNewsItems: 5, // 0 for unlimited
         ignoreOldItems: true,
         ignoreOlderThan: 2 * 24 * 60 * 60 * 1000, // 2 days
         removeStartTags: "both",
@@ -64,8 +48,8 @@ Module.register("MMM-NewsFeedTicker", {
         startTags: [],
         endTags: [],
         prohibitedWords: [],
-        scrollLength: "150%",
-        logFeedWarnings: true,
+        scrollLength: "100%",
+        logFeedWarnings: false,
         encoding: "UTF-8", //ISO-8859-1
     },
 
@@ -212,17 +196,16 @@ Module.register("MMM-NewsFeedTicker", {
                 description.innerHTML = (this.config.truncDescription ? (txtDesc.length > this.config.lengthDescription ? txtDesc.substring(0, this.config.lengthDescription) + "..." : txtDesc) : txtDesc);
                 wrapper.appendChild(description);
             }
-            // if icon requested
-            if (this.config.showMarquee && this.config.showIcon) {               
-                // if there is an image in the feed item
-                if(this.newsItems[this.activeItem].logo!==''){
-                  var image = document.createElement("img");
-                  image.className = "image";
-                  // display it as requested
-                  image.src = this.newsItems[this.activeItem].logo;
-                  wrapper.appendChild(image);    
-                }                  
-           
+
+            if (this.config.showMarquee) {
+                // if icon requested
+                if(this.config.showIcon) {
+                    var image = document.createElement("img");
+                    image.className = "image";
+                    // display it as requested
+                    image.src = this.newsItems[this.activeItem].logo;
+                    wrapper.appendChild(image);
+                }
 
                 var tickerBody = document.createElement("div")
                 tickerBody.className = "tickerbody";
@@ -244,7 +227,7 @@ Module.register("MMM-NewsFeedTicker", {
                     for (i = 0; i < spanSelector.length; i++) {
                         var spanLength = spanSelector[i].offsetWidth,
                             timeTaken = spanLength / speed;
-                        spanSelector[i].style.updateInterval = timeTaken + "s";
+                        spanSelector[i].style.animationDuration = timeTaken + "s";
                     }
                 }
                 calcSpeed(100);
@@ -292,8 +275,8 @@ Module.register("MMM-NewsFeedTicker", {
     registerFeeds: function() {
         for (var f in this.config.feeds) {
             var feed = this.config.feeds[f];
-            if(feed.customLogo!== undefined)
-              feed.customLogo = this.data.path+"pics/"+feed.customLogo;            
+            if(feed.customLogo !== undefined)
+                feed.customLogo = this.data.path+"pics/" + feed.customLogo;
             this.sendSocketNotification("ADD_FEED", {
                 feed: feed,
                 config: this.config
