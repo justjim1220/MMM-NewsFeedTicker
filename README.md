@@ -23,15 +23,18 @@ modules: [
 	    feeds: [
 		{
 			title: "New York Times",
-			url: "http://www.nytimes.com/services/xml/rss/nyt/HomePage.xml"
+			url: "http://www.nytimes.com/services/xml/rss/nyt/HomePage.xml",
+			customLogo: "NYT_logo_rss_250x40.png"
 		},
 		{
 			title: "USA Today",
-			url: "http://rssfeeds.usatoday.com/UsatodaycomNation-TopStories"
+			url: "http://rssfeeds.usatoday.com/UsatodaycomNation-TopStories",
+			customLogo: "RSS_Syndication_Logo-USATN.png"
 		},
 		{
 			title: "BBC World News",
-			url: "http://feeds.bbci.co.uk/news/world/rss.xml#"
+			url: "http://feeds.bbci.co.uk/news/world/rss.xml#",
+			customLogo: "bbc_news_120x60.gif"
 		}
     	    ]
 	}
