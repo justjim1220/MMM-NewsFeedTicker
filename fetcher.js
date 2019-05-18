@@ -25,29 +25,30 @@ var Fetcher = function(url, reloadInterval, encoding, logFeedWarnings, defaultLo
 
 	var reloadTimer = null;
 	var items = [];
-	var logo = defaultLogo;
+	var defaultlogo = defaultLogo;
+  var feedlogo= '';
 
 	var fetchFailedCallback = function() {};
 	var itemsReceivedCallback = function() {};
 
-  var getFeedItemicon= function(item){
-    var iconurl='';
+  var getFeedItemLogo= function(item){
+    var logourl='';
    // loop thru the elements of this item object
    outer:   for(var el of Object.keys(item)){
-        // if the element is itself an object (not just string)
-       // console.log("element "+el+" typeof ="+typeof item[el])        
+       // if the element is itself an object (not just string)
+        //console.log("element "+el+" typeof ="+typeof item[el])        
         if(typeof item[el] == 'object') {
           // loop thru ITS attributes
           for(var attrib of Object.keys(item[el])){  
-          //  console.log("attribute="+attrib + " type ="+typeof attrib)
+            //console.log("attribute="+attrib + " type ="+typeof attrib)
             try {
               // get lowercase string for easy comparisons             
               var f = item[el][attrib].toLowerCase();
               // if this string contains one of the three icon types in rss
-              if(f.includes('.png') || f.includes('.gif') || f.includes('.jpg')){
-                 // then save its link
-           //      console.log("have rss entry icon="+f)
-                iconurl = item[el][attrib];
+              if(f.endsWith('.png') || f.endsWith('.gif') || f.endsWith('.jpg')){
+                // then save its link
+                //console.log("have rss entry object type icon="+f)
+                logourl = item[el][attrib];
                 // don't need to look anymore
                 break outer;
               }
@@ -55,8 +56,18 @@ var Fetcher = function(url, reloadInterval, encoding, logFeedWarnings, defaultLo
             catch(exception){}            
           }
         }
-      } 
-    return iconurl;
+        else{
+          var f = item[el].toLowerCase()
+          if(f.endsWith(".png") || f.endsWith('.gif') || f.endsWith('.jpg')){
+            // then save its link
+            console.log("have rss entry string type icon="+f)
+            logourl = item[el][attrib];
+            // don't need to look anymore
+            break outer;
+          }
+        } 
+   }
+   return logourl;
   }
 	/* private methods */
 
@@ -76,7 +87,11 @@ var Fetcher = function(url, reloadInterval, encoding, logFeedWarnings, defaultLo
 			var description = item.description || item.summary || item.content || "";
 			var pubdate = item.pubdate || item.published || item.updated || item["dc:date"];
 			var url = item.url || item.link || "";
-      var icon= getFeedItemicon(item)
+      console.log(" item.logo ="+ item.logo)
+      console.log(" feed.logo ="+ feedlogo)
+      console.log(" found .logo ="+ getFeedItemLogo(item))
+      console.log(" default logo ="+ defaultlogo)
+      logo= item.logo || getFeedItemLogo(item) || /*feedlogo || */ defaultLogo;
 
 			if (title && pubdate) {
 				var regex = /(<([^>]+)>)/ig;
@@ -87,8 +102,7 @@ var Fetcher = function(url, reloadInterval, encoding, logFeedWarnings, defaultLo
 					description: description,
 					pubdate: pubdate,
 					url: url,
-					logo: defaultLogo,
-          icon: icon
+					logo: logo
 				});
 
 			} else if (logFeedWarnings) {
@@ -103,7 +117,7 @@ var Fetcher = function(url, reloadInterval, encoding, logFeedWarnings, defaultLo
 
 		parser.on("image", (image) =>{
 			if (image.url) {
-				defaultLogo = image.url
+				feedlogo = image.url
 			} else if (logFeedWarnings) {
 				console.log("image parsing error.")
 			}

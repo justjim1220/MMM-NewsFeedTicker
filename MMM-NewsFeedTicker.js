@@ -215,20 +215,14 @@ Module.register("MMM-NewsFeedTicker", {
             // if icon requested
             if (this.config.showMarquee && this.config.showIcon) {               
                 // if there is an image in the feed item
-                if(this.newsItems[this.activeItem].icon!==''){
+                if(this.newsItems[this.activeItem].logo!==''){
                   var image = document.createElement("img");
                   image.className = "image";
                   // display it as requested
-                  image.src = this.newsItems[this.activeItem].icon;
-                  wrapper.appendChild(image);                
-                } else {
-                  if(this.newsItems[this.activeItem].customLogo !== undefined ){
-                    var image = document.createElement("img");
-                    image.className = "image";
-                    image.src = "file:///"+this.data.path+"/pics/"+this.newsItems[this.activeItem].customLogo;
-                    wrapper.appendChild(image);
-                  }
-                }              
+                  image.src = this.newsItems[this.activeItem].logo;
+                  wrapper.appendChild(image);    
+                }                  
+           
 
                 var tickerBody = document.createElement("div")
                 tickerBody.className = "tickerbody";
