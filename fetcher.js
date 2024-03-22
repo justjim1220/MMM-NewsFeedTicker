@@ -1,13 +1,11 @@
-/* Magic Mirror
+/* MagicMirror²
  * Fetcher
  *
- * By Michael Teeuw http://michaelteeuw.nl
+ * By Michael Teeuw https://michaelteeuw.nl
  * MIT Licensed.
  */
 
-var FeedMe = require("feedme");
-var request = require("request");
-var iconv = require("iconv-lite");
+const FeedMe = require("feedme");
 
 /* Fetcher
  * Responsible for requesting an update on the set interval and broadcasting the data.
@@ -17,18 +15,18 @@ var iconv = require("iconv-lite");
  * attribute logFeedWarnings boolean - Log warnings when there is an error parsing a news article.
  */
 
-var Fetcher = function(url, reloadInterval, encoding, logFeedWarnings, defaultLogo) {
-	var self = this;
+const Fetcher = function (url, reloadInterval, encoding, logFeedWarnings, defaultLogo) {
+	const self = this;
 	if (reloadInterval < 1000) {
 		reloadInterval = 1000;
 	}
 
-	var reloadTimer = null;
-	var items = [];
-	var logo = defaultLogo;
+	let reloadTimer = null;
+	let items = [];
+	const logo = defaultLogo;
 
-	var fetchFailedCallback = function() {};
-	var itemsReceivedCallback = function() {};
+	let fetchFailedCallback = function () {};
+	let itemsReceivedCallback = function () {};
 
 	/* private methods */
 
@@ -36,84 +34,93 @@ var Fetcher = function(url, reloadInterval, encoding, logFeedWarnings, defaultLo
 	 * Request the new items.
 	 */
 
-	var fetchNews = function() {
+	const fetchNews = async function () {
 		clearTimeout(reloadTimer);
 		reloadTimer = null;
 		items = [];
 
-		var parser = new FeedMe();
 
-		parser.on("item", (item)=> {
-			var title = item.title;
-			var description = item.description || item.summary || item.content || "";
-			var pubdate = item.pubdate || item.published || item.updated || item["dc:date"];
-			var url = item.url || item.link || "";
-			var defaultLogo = item.logo || item.image || item.enclosure || "";
+		try {
+			const nodeVersion = Number(process.version.match(/^v(\d+\.\d+)/)[1]);
 
-			if (title && pubdate) {
-				var regex = /(<([^>]+)>)/ig;
-				description = description.toString().replace(regex, "");
+			const response = await fetch(url, {
+				headers: {
+					"User-Agent": `Mozilla/5.0 (Node.js ${nodeVersion}) MagicMirror/${global.version} (https://github.com/MichMich/MagicMirror/)`,
+					"Cache-Control": "max-age=0, no-cache, no-store, must-revalidate",
+					Pragma: "no-cache"
+				}
+			});
 
-				items.push({
-					title: title,
-					description: description,
-					pubdate: pubdate,
-					url: url,
-					logo: logo,
-					enclosure: url
+			if (response.ok) {
+				const data = await response.text();
+				const parser = new FeedMe();
+
+				parser.on("item", (item) => {
+					const {title} = item;
+					let description = item.description || item.summary || item.content || "";
+					const pubdate = item.pubdate || item.published || item.updated || item["dc:date"];
+					const url = item.url || item.link || "";
+					const defaultLogo = item.logo || item.image || item.enclosure || "";
+
+					if (title && pubdate) {
+						const regex = /(<([^>]+)>)/ig;
+						description = description.toString().replace(regex, "");
+
+						items.push({
+							title,
+							description,
+							pubdate,
+							url,
+							logo,
+							enclosure: url
+						});
+					} else if (logFeedWarnings) {
+						console.log("Can't parse feed item:");
+						console.log(item);
+						console.log(`Title: ${title}`);
+						console.log(`Image: ${image}`);
+						console.log(`Description: ${description}`);
+						console.log(`Pubdate: ${pubdate}`);
+					}
 				});
 
-			} else if (logFeedWarnings) {
-				console.log("Can't parse feed item:");
-				console.log(item);
-				console.log("Title: " + title);
-				console.log("Image: " + image);
-				console.log("Description: " + description);
-				console.log("Pubdate: " + pubdate);
+				parser.on("image", (image) => {
+					if (image.url) {
+						defautLogo = image.url;
+					} else if (logFeedWarnings) {
+						console.log("image parsing error.");
+					}
+				});
+
+				parser.on("end", () => {
+					// console.log("end parsing - " + url);
+					self.broadcastItems();
+					scheduleTimer();
+				});
+
+				parser.on("error", (error) => {
+					fetchFailedCallback(self, error);
+					scheduleTimer();
+				});
+
+				parser.end(data);
+			} else {
+				console.error(`Failed to fetch news feed: ${response.statusText}`);
 			}
-		});
-
-		parser.on("image", (image) =>{
-			if (image.url) {
-				defautLogo = image.url
-			} else if (logFeedWarnings) {
-				console.log("image parsing error.")
-			}
-		});
-
-		parser.on("end",	function() {
-			//console.log("end parsing - " + url);
-			self.broadcastItems();
-			scheduleTimer();
-		});
-
-		parser.on("error", function(error) {
-			fetchFailedCallback(self, error);
-			scheduleTimer();
-		});
-
-
-		nodeVersion = Number(process.version.match(/^v(\d+\.\d+)/)[1]);
-		headers =	{"User-Agent": "Mozilla/5.0 (Node.js "+ nodeVersion + ") MagicMirror/"	+ global.version +	" (https://github.com/MichMich/MagicMirror/)",
-			"Cache-Control": "max-age=0, no-cache, no-store, must-revalidate",
-			"Pragma": "no-cache"}
-
-		request({uri: url, encoding: null, headers: headers})
-			.on("error", function(error) {
-				fetchFailedCallback(self, error);
-				scheduleTimer();
-			})
-			.pipe(iconv.decodeStream(encoding)).pipe(parser);
+		} catch (error) {
+			console.error(`Error fetching news feed: ${error.message}`);
+		}
 	};
+
 
 	/* scheduleTimer()
 	 * Schedule the timer for the next update.
 	 */
 
-	var scheduleTimer = function() {
-		//console.log('Schedule update timer.');
+	var scheduleTimer = function () {
+		// console.log('Schedule update timer.');
 		clearTimeout(reloadTimer);
-		reloadTimer = setTimeout(function() {
+		reloadTimer = setTimeout(() => {
 			fetchNews();
 		}, reloadInterval);
 	};
@@ -125,7 +132,7 @@ var Fetcher = function(url, reloadInterval, encoding, logFeedWarnings, defaultLo
 	 *
 	 * attribute interval number - Interval for the update in milliseconds.
 	 */
-	this.setReloadInterval = function(interval) {
+	this.setReloadInterval = function (interval) {
 		if (interval > 1000 && interval < reloadInterval) {
 			reloadInterval = interval;
 		}
@@ -134,31 +141,31 @@ var Fetcher = function(url, reloadInterval, encoding, logFeedWarnings, defaultLo
 	/* startFetch()
 	 * Initiate fetchNews();
 	 */
-	this.startFetch = function() {
+	this.startFetch = function () {
 		fetchNews();
 	};
 
 	/* broadcastItems()
 	 * Broadcast the existing items.
 	 */
-	this.broadcastItems = function() {
+	this.broadcastItems = function () {
 		if (items.length <= 0) {
-			//console.log('No items to broadcast yet.');
+			// console.log('No items to broadcast yet.');
 			return;
 		}
-		//console.log('Broadcasting ' + items.length + ' items.');
+		// console.log('Broadcasting ' + items.length + ' items.');
 		itemsReceivedCallback(self);
 	};
 
-	this.onReceive = function(callback) {
+	this.onReceive = function (callback) {
 		itemsReceivedCallback = callback;
 	};
 
-	this.onError = function(callback) {
+	this.onError = function (callback) {
 		fetchFailedCallback = callback;
 	};
 
-	this.url = function() {
+	this.url = function () {
 		return url;
 	};
 
@@ -167,11 +174,11 @@ var Fetcher = function(url, reloadInterval, encoding, logFeedWarnings, defaultLo
 		return image;
 	};
 	*/
-	this.logo = function() {
-		return logo
-	}
+	this.logo = function () {
+		return logo;
+	};
 
-	this.items = function() {
+	this.items = function () {
 		return items;
 	};
 };
