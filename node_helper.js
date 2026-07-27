@@ -1,12 +1,11 @@
-/* Magic Mirror
- * Node Helper: Newsfeed
+/* MagicMirror²
+ * Node Helper: MMM-NewsFeedTicker
  *
  * By Michael Teeuw https://michaelteeuw.nl
  * MIT Licensed.
  */
 
 const NodeHelper = require("node_helper");
-const validUrl = require("valid-url");
 const Fetcher = require("./fetcher.js");
 
 module.exports = NodeHelper.create({
@@ -23,6 +22,15 @@ module.exports = NodeHelper.create({
 		}
 	},
 
+	isAllowedFeedUrl (url) {
+		try {
+			const parsedUrl = new URL(url);
+			return parsedUrl.protocol === "http:" || parsedUrl.protocol === "https:";
+		} catch {
+			return false;
+		}
+	},
+
 	/* createFetcher(feed, config)
 	 * Creates a fetcher for a new feed if it doesn't exist yet.
 	 * Otherwise it reuses the existing one.
@@ -32,12 +40,12 @@ module.exports = NodeHelper.create({
 	 */
 	createFetcher (feed, config) {
 		const self = this;
-		// var defaultLogo = feed.image || "";
+		// const defaultLogo = feed.image || "";
 		const url = feed.url || "";
 		const encoding = feed.encoding || "UTF-8";
 		const reloadInterval = feed.reloadInterval || config.reloadInterval || 5 * 60 * 1000;
 
-		if (!validUrl.isUri(url)) {
+		if (!this.isAllowedFeedUrl(url)) {
 			self.sendSocketNotification("INCORRECT_URL", url);
 			return;
 		}

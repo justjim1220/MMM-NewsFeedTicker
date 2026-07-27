@@ -2,7 +2,7 @@
 
 news ticker like what you see on the news channels, except for online newspapers, showing current headlines and short descritpions.
 
-The MMM-NewsFeedTickermodule is a [3rd Party Module](https://github.com/MichMich/MagicMirror/wiki/3rd-Party-Modules) of the [MagicMirror²](https://magicmirror.builders/).
+The MMM-NewsFeedTickermodule is a [3rd Party Module](https://github.com/MagicMirrorOrg/MagicMirror/wiki/3rd-Party-Modules) of the [MagicMirror²](https://magicmirror.builders/).
 
 ## Screenshots
 
@@ -15,11 +15,9 @@ The MMM-NewsFeedTickermodule is a [3rd Party Module](https://github.com/MichMich
 To use this module, add it to the modules array in the 'config/config.js' file:
 
 ```js
-modules: [
   {
     module: "MMM-NewsFeedTicker",
     position: "bottom_bar",
-    //classes: "day_scheduler",
     config: {
       feeds: [
         {
@@ -40,7 +38,6 @@ modules: [
       ]
     }
   },
-]
 ```
 
 ## Install
@@ -49,6 +46,14 @@ modules: [
 cd ~/MagicMirror/modules
 git clone https://github.com/justjim1220/MMM-NewsFeedTicker
 cd MMM-NewsFeedTicker
+npm install
+```
+
+## Update
+
+```bash
+cd ~/MagicMirror/modules/MMM-NewsFeedTicker
+git pull
 npm install
 ```
 
@@ -72,12 +77,11 @@ To change background color, add the following to you custom.css file:
 
 To remove background color, change to `background: none;`
 
-Some users are having issues with speed of the animation.
-Go to the following line in the MMM-NewsFeedTicker.js file and change the number `1000` to a lower number.
-(some users are finding that changing to 300 works best for them, adjust to your preference)
+If the ticker feels too slow or too fast, adjust `updateInterval` in your module config.
+The marquee duration now follows that value, so a lower interval scrolls and rotates items faster.
 
 ```js
-tickerBody.style.animationDuration = Math.round(this.config.updateInterval / 1000) + "s";
+updateInterval: 30 * 1000,
 ```
 
 ## Acknowledgements

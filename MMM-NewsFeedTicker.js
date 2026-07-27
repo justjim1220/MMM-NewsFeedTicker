@@ -1,5 +1,4 @@
-/* Module: NewsFeedTicker
- * version 1.2.0
+/* Module: MMM-NewsFeedTicker
  *
  * ((modification of the default newsfeed module
  * By Michael Teeuw https://michaelteeuw.nl
@@ -14,6 +13,75 @@
  * and my very own homemade Southern Sweet Tea.
  *
  */
+
+const RELATIVE_TIME_UNITS = [
+	["year", 31536000],
+	["month", 2592000],
+	["day", 86400],
+	["hour", 3600],
+	["minute", 60],
+	["second", 1]
+];
+const FALLBACK_RELATIVE_TIME_UNIT = RELATIVE_TIME_UNITS[RELATIVE_TIME_UNITS.length - 1];
+
+/**
+ * Formats a date-like value as localized relative time (for example: "2 hours ago").
+ *
+ * @param {string|number|Date} dateValue Date input to format.
+ * @param {string} [locale] Preferred locale code (falls back to "en").
+ * @returns {string} Relative time string or an empty string for invalid dates.
+ */
+function formatRelativeTime (dateValue, locale) {
+	const date = new Date(dateValue);
+	if (Number.isNaN(date.getTime())) {
+		return "";
+	}
+
+	const diffInSeconds = Math.round((date.getTime() - Date.now()) / 1000);
+	const [unit, unitSeconds] = RELATIVE_TIME_UNITS.find(([, seconds]) => Math.abs(diffInSeconds) >= seconds) || FALLBACK_RELATIVE_TIME_UNIT;
+	const value = Math.round(diffInSeconds / unitSeconds);
+	const preferredLocale = locale || "en";
+
+	try {
+		return new Intl.RelativeTimeFormat(preferredLocale, {numeric: "auto"}).format(value, unit);
+	} catch {
+		return new Intl.RelativeTimeFormat("en", {numeric: "auto"}).format(value, unit);
+	}
+}
+
+/**
+ * Removes configured prefixes from a text value.
+ *
+ * @param {string} text The source text.
+ * @param {string[]} tags Prefix tags to remove.
+ * @returns {string} The normalized text.
+ */
+function stripConfiguredStartTags (text, tags) {
+	let result = text;
+	for (const tag of tags) {
+		if (result.slice(0, tag.length) === tag) {
+			result = result.slice(tag.length);
+		}
+	}
+	return result;
+}
+
+/**
+ * Removes configured suffixes from a text value.
+ *
+ * @param {string} text The source text.
+ * @param {string[]} tags Suffix tags to remove.
+ * @returns {string} The normalized text.
+ */
+function stripConfiguredEndTags (text, tags) {
+	let result = text;
+	for (const tag of tags) {
+		if (result.slice(-tag.length) === tag) {
+			result = result.slice(0, -tag.length);
+		}
+	}
+	return result;
+}
 
 Module.register("MMM-NewsFeedTicker", {
 
@@ -53,15 +121,51 @@ Module.register("MMM-NewsFeedTicker", {
 		encoding: "UTF-8" // ISO-8859-1
 	},
 
-	requiresversion: "2.1.0",
-
-	// Define required scripts.
-	getScripts () {
-		return ["moment.js"];
-	},
-
 	getStyles () {
 		return ["MMM-NewsFeedTicker.css"];
+	},
+
+	getLocale () {
+		return this.config.language || (typeof config !== "undefined" ? config.language : "en");
+	},
+
+	getRelativeTime (dateValue) {
+		return formatRelativeTime(dateValue, this.getLocale());
+	},
+
+	/**
+	 * Applies configured start/end tag trimming to title and description.
+	 *
+	 * @param {{title?: string, description?: string}} item Feed item to normalize.
+	 * @returns {{title: string, description: string}} The normalized feed item.
+	 */
+	normalizeItemTags (item) {
+		const normalizedItem = item;
+
+		if (typeof normalizedItem.title !== "string") {
+			normalizedItem.title = "";
+		}
+		if (typeof normalizedItem.description !== "string") {
+			normalizedItem.description = "";
+		}
+
+		if (this.config.removeStartTags === "title" || this.config.removeStartTags === "both") {
+			normalizedItem.title = stripConfiguredStartTags(normalizedItem.title, this.config.startTags);
+		}
+
+		if (this.config.removeStartTags === "description" || this.config.removeStartTags === "both") {
+			normalizedItem.description = stripConfiguredStartTags(normalizedItem.description, this.config.startTags);
+		}
+
+		if (this.config.removeEndTags === "title" || this.config.removeEndTags === "both") {
+			normalizedItem.title = stripConfiguredEndTags(normalizedItem.title, this.config.endTags);
+		}
+
+		if (this.config.removeEndTags === "description" || this.config.removeEndTags === "both") {
+			normalizedItem.description = stripConfiguredEndTags(normalizedItem.description, this.config.endTags);
+		}
+
+		return normalizedItem;
 	},
 
 	// Define required translations.
@@ -76,13 +180,11 @@ Module.register("MMM-NewsFeedTicker", {
 	start () {
 		Log.info(`Starting module: ${this.name}`);
 
-		// Set locale.
-		moment.locale(config.language);
-
 		this.newsItems = [];
 		this.loaded = false;
 		this.activeItem = 0;
 		this.scrollPosition = 0;
+		this.updateTimer = null;
 
 		this.registerFeeds();
 
@@ -107,6 +209,7 @@ Module.register("MMM-NewsFeedTicker", {
 	// Override dom generator.
 	getDom () {
 		const wrapper = document.createElement("div");
+		const activeItem = this.newsItems[this.activeItem];
 
 		if (this.config.feedUrl) {
 			wrapper.className = "bold normal";
@@ -124,56 +227,20 @@ Module.register("MMM-NewsFeedTicker", {
 				const sourceAndTimestamp = document.createElement("div");
 				// sourceAndTimestamp.className = "bold large dimmed";
 
-				if (this.config.showSourceTitle && this.newsItems[this.activeItem].sourceTitle !== "") {
-					sourceAndTimestamp.innerHTML = this.newsItems[this.activeItem].sourceTitle;
+				if (this.config.showSourceTitle && activeItem.sourceTitle !== "") {
+					sourceAndTimestamp.innerHTML = activeItem.sourceTitle;
 				}
-				if (this.config.showSourceTitle && this.newsItems[this.activeItem].sourceTitle !== "" && this.config.showPublishDate) {
+				if (this.config.showSourceTitle && activeItem.sourceTitle !== "" && this.config.showPublishDate) {
 					sourceAndTimestamp.innerHTML += " ";
 				}
 				if (this.config.showPublishDate) {
-					sourceAndTimestamp.innerHTML += moment(new Date(this.newsItems[this.activeItem].pubdate)).fromNow();
+					sourceAndTimestamp.innerHTML += this.getRelativeTime(activeItem.pubdate);
 				}
-				if (this.config.showSourceTitle && this.newsItems[this.activeItem].sourceTitle !== "" || this.config.showPublishDate) {
+				if ((this.config.showSourceTitle && activeItem.sourceTitle !== "") || this.config.showPublishDate) {
 					sourceAndTimestamp.innerHTML += ":";
 				}
 
 				wrapper.appendChild(sourceAndTimestamp);
-			}
-
-			// Remove selected tags from the beginning of rss feed items (title or description)
-			if (this.config.removeStartTags == "title" || this.config.removeStartTags == "both") {
-				for (f = 0; f < this.config.startTags.length; f++) {
-					if (this.newsItems[this.activeItem].title.slice(0, this.config.startTags[f].length) == this.config.startTags[f]) {
-						this.newsItems[this.activeItem].title = this.newsItems[this.activeItem].title.slice(this.config.startTags[f].length, this.newsItems[this.activeItem].title.length);
-					}
-				}
-			}
-
-			if (this.config.removeStartTags == "description" || this.config.removeStartTags == "both") {
-				if (this.config.showDescription) {
-					for (f = 0; f < this.config.startTags.length; f++) {
-						if (this.newsItems[this.activeItem].description.slice(0, this.config.startTags[f].length) == this.config.startTags[f]) {
-							this.newsItems[this.activeItem].title = this.newsItems[this.activeItem].description.slice(this.config.startTags[f].length, this.newsItems[this.activeItem].description.length);
-						}
-					}
-				}
-			}
-
-			// Remove selected tags from the end of rss feed items (title or description)
-			if (this.config.removeEndTags) {
-				for (f = 0; f < this.config.endTags.length; f++) {
-					if (this.newsItems[this.activeItem].title.slice(-this.config.endTags[f].length) == this.config.endTags[f]) {
-						this.newsItems[this.activeItem].title = this.newsItems[this.activeItem].title.slice(0, -this.config.endTags[f].length);
-					}
-				}
-
-				if (this.config.showDescription) {
-					for (f = 0; f < this.config.endTags.length; f++) {
-						if (this.newsItems[this.activeItem].description.slice(-this.config.endTags[f].length) == this.config.endTags[f]) {
-							this.newsItems[this.activeItem].description = this.newsItems[this.activeItem].description.slice(0, -this.config.endTags[f].length);
-						}
-					}
-				}
 			}
 
 			if (this.config.showSourceTicle) {
@@ -190,7 +257,7 @@ Module.register("MMM-NewsFeedTicker", {
 				description.className = `light${!this.config.wrapDescription
 					? " no-wrap"
 					: ""}`;
-				const txtDesc = this.newsItems[this.activeItem].description;
+				const txtDesc = activeItem.description;
 				description.innerHTML = this.config.truncDescription
 					? txtDesc.length > this.config.lengthDescription
 						? `${txtDesc.substring(0, this.config.lengthDescription)}...`
@@ -205,7 +272,7 @@ Module.register("MMM-NewsFeedTicker", {
 					const image = document.createElement("img");
 					image.className = "image";
 					// display it as requested
-					image.src = this.newsItems[this.activeItem].logo;
+					image.src = activeItem.logo;
 					wrapper.appendChild(image);
 				}
 
@@ -215,24 +282,8 @@ Module.register("MMM-NewsFeedTicker", {
 				const headline = document.createElement("span");
 				headline.className = "headline";
 				tickerBody.style.animationDuration = `${Math.round(this.config.updateInterval / 1000)}s`;
-				tickerBody.addEventListener("animationend", () => {
-					headline.innerHTML = "";
-					this.scheduleUpdateInterval();
-				}, false);
 
-				headline.innerHTML = `<font color= #ffaa00>${moment(new Date(this.newsItems[this.activeItem].pubdate)).fromNow()}: &nbsp;` + `</font>${this.newsItems[this.activeItem].title}&nbsp; || &nbsp;${this.newsItems[this.activeItem].description}`;
-
-				function calcSpeed (speed) {
-					// Time = Distance/Speed
-					let spanSelector = document.querySelectorAll("headline"),
-						i;
-					for (i = 0; i < spanSelector.length; i++) {
-						const spanLength = spanSelector[i].offsetWidth,
-							timeTaken = spanLength / speed;
-						spanSelector[i].style.animationDuration = `${timeTaken}s`;
-					}
-				}
-				calcSpeed(100);
+				headline.innerHTML = `<font color= #ffaa00>${this.getRelativeTime(activeItem.pubdate)}: &nbsp;` + `</font>${activeItem.title}&nbsp; || &nbsp;${activeItem.description}`;
 
 
 				tickerBody.appendChild(headline);
@@ -251,8 +302,8 @@ Module.register("MMM-NewsFeedTicker", {
 				fullArticle.style.left = "0";
 				fullArticle.style.border = "none";
 				fullArticle.src = typeof this.newsItems[this.activeItem].url === "string"
-					? this.newsItems[this.activeItem].url
-					: this.newsItems[this.activeItem].url.href;
+					? activeItem.url
+					: activeItem.url.href;
 				fullArticle.style.zIndex = 1;
 				wrapper.appendChild(fullArticle);
 			}
@@ -300,7 +351,7 @@ Module.register("MMM-NewsFeedTicker", {
 					const item = feedItems[i];
 					item.sourceTitle = this.titleForFeed(feed);
 					if (!(this.config.ignoreOldItems && Date.now() - new Date(item.pubdate) > this.config.ignoreOlderThan)) {
-						newsItems.push(item);
+						newsItems.push(this.normalizeItemTags(item));
 					}
 				}
 			}
@@ -377,14 +428,23 @@ Module.register("MMM-NewsFeedTicker", {
    * Schedule visual update.
    */
 	scheduleUpdateInterval () {
-		const self = this;
+		this.stopUpdateTimer();
+		this.updateDom(this.config.animationSpeed);
 
-		self.updateDom(self.config.animationSpeed);
+		if (this.newsItems.length <= 1) {
+			return;
+		}
 
-		timer = setInterval(() => {
-			self.activeItem++;
-			self.updateDom(self.config.animationSpeed);
+		this.updateTimer = setTimeout(() => {
+			this.activeItem++;
+			this.scheduleUpdateInterval();
 		}, this.config.updateInterval);
+	},
+	stopUpdateTimer () {
+		if (this.updateTimer) {
+			clearTimeout(this.updateTimer);
+			this.updateTimer = null;
+		}
 	},
 
 	/* capitalizeFirstLetter(string)
@@ -405,15 +465,19 @@ Module.register("MMM-NewsFeedTicker", {
 		// reset bottom bar alignment
 		document.getElementsByClassName("region top bar")[0].style.top = "0";
 		document.getElementsByClassName("region top bar")[0].style.top = "inherit";
-		if (!timer) {
+		if (!this.updateTimer) {
 			this.scheduleUpdateInterval();
 		}
 	},
 
 	notificationReceived (notification, payload, sender) {
+		if (!notification || !notification.startsWith("ARTICLE_")) {
+			return;
+		}
+
 		Log.info(`${this.name} - received notification: ${notification}`);
 		if (notification == "ARTICLE_NEXT") {
-			var before = this.activeItem;
+			const before = this.activeItem;
 			this.activeItem++;
 			if (this.activeItem >= this.newsItems.length) {
 				this.activeItem = 0;
@@ -422,7 +486,7 @@ Module.register("MMM-NewsFeedTicker", {
 			Log.info(`${this.name} - going from article #${before} to #${this.activeItem} (of ${this.newsItems.length})`);
 			this.updateDom(100);
 		} else if (notification == "ARTICLE_PREVIOUS") {
-			var before = this.activeItem;
+			const before = this.activeItem;
 			this.activeItem--;
 			if (this.activeItem < 0) {
 				this.activeItem = this.newsItems.length - 1;
@@ -473,8 +537,7 @@ Module.register("MMM-NewsFeedTicker", {
 			document.getElementsByClassName("region top bar")[0].style.bottom = "inherit";
 			document.getElementsByClassName("region top bar")[0].style.top = "-90px";
 		}
-		clearInterval(timer);
-		timer = null;
+		this.stopUpdateTimer();
 		Log.info(`${this.name} - showing ${this.isShowingDescription}`
 			? "article description"
 			: "full article");

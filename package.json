@@ -19,8 +19,6 @@
   "author": "justjim1220",
   "license": "GPL-3.0-only",
   "dependencies": {
-    "feedme": "^2.0.2",
-    "moment": "^2.30.1",
-    "valid-url": "^1.0.9"
+    "feedme": "^2.0.2"
   }
 }

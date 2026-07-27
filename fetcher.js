@@ -45,7 +45,7 @@ const Fetcher = function (url, reloadInterval, encoding, logFeedWarnings, defaul
 
 			const response = await fetch(url, {
 				headers: {
-					"User-Agent": `Mozilla/5.0 (Node.js ${nodeVersion}) MagicMirror/${global.version}`, // (https://github.com/MichMich/MagicMirror/)`,
+					"User-Agent": `Mozilla/5.0 (Node.js ${nodeVersion}) MagicMirror/${global.version}`, // (https://github.com/justjim1220/MMM-NewsFeedTicker)`,
 					"Cache-Control": "max-age=0, no-cache, no-store, must-revalidate",
 					Pragma: "no-cache"
 				}
@@ -117,7 +117,7 @@ const Fetcher = function (url, reloadInterval, encoding, logFeedWarnings, defaul
 	 * Schedule the timer for the next update.
 	 */
 
-	var scheduleTimer = function () {
+	const scheduleTimer = function () {
 		// console.log('Schedule update timer.');
 		clearTimeout(reloadTimer);
 		reloadTimer = setTimeout(() => {
